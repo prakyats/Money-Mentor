@@ -13,7 +13,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) =>
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       {/* Left side - decorative panel */}
-      <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-finance-600 to-finance-800 p-10 text-white">
+      <div className="hidden md:flex md:w-1/2 bg-black p-10 text-white">
         <div className="flex flex-col h-full w-full justify-between">
           <Logo />
           <div className="space-y-6 max-w-lg">
@@ -39,18 +39,18 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) =>
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl">
+              <div className="bg-yellow-400/10 backdrop-blur-sm p-4 rounded-xl">
                 <div className="text-3xl font-bold">97%</div>
                 <div className="text-sm opacity-80">Customer satisfaction</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl">
+              <div className="bg-yellow-400/10 backdrop-blur-sm p-4 rounded-xl">
                 <div className="text-3xl font-bold">250K+</div>
                 <div className="text-sm opacity-80">Active users</div>
               </div>
             </motion.div>
           </div>
           <div className="text-sm opacity-70">
-            © 2023 Finance. All rights reserved.
+            © 2023 Money Mentor. All rights reserved.
           </div>
         </div>
       </div>
