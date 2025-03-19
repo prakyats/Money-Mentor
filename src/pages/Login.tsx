@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -7,12 +8,14 @@ import { signIn, getAuthErrorMessage } from "@/lib/firebase";
 import AuthLayout from "@/components/AuthLayout";
 import InputField from "@/components/InputField";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -103,20 +106,22 @@ const Login = () => {
         />
         
         <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <input
-              id="remember-me"
-              name="remember-me"
-              type="checkbox"
-              className="h-4 w-4 rounded border-gray-300 text-yellow-500 focus:ring-yellow-500"
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="remember-me" 
+              checked={rememberMe} 
+              onCheckedChange={(checked) => setRememberMe(checked === true)}
             />
-            <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+            <label 
+              htmlFor="remember-me" 
+              className="text-sm text-gray-700 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
               Remember me
             </label>
           </div>
           
           <div className="text-sm">
-            <a href="#" className="font-medium text-yellow-600 hover:text-yellow-500">
+            <a href="#" className="font-medium text-primary hover:text-primary/80">
               Forgot your password?
             </a>
           </div>
@@ -124,12 +129,12 @@ const Login = () => {
         
         <Button
           type="submit"
-          className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-medium py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+          className="w-full"
           disabled={isLoading}
         >
           {isLoading ? (
             <div className="flex items-center gap-2">
-              <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin"></div>
               <span>Signing in...</span>
             </div>
           ) : (
@@ -144,7 +149,7 @@ const Login = () => {
             transition={{ delay: 0.5 }}
           >
             Don't have an account?{" "}
-            <Link to="/register" className="text-yellow-600 hover:text-yellow-700 font-medium">
+            <Link to="/register" className="text-primary hover:text-primary/80 font-medium">
               Create account
             </Link>
           </motion.p>

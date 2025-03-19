@@ -15,19 +15,19 @@ const Index = () => {
         
         <div className="flex items-center gap-6">
           <nav className="hidden md:flex items-center gap-6">
-            <Link to="#features" className="text-gray-700 hover:text-finance-600 font-medium">Features</Link>
-            <Link to="#testimonials" className="text-gray-700 hover:text-finance-600 font-medium">Testimonials</Link>
-            <Link to="#pricing" className="text-gray-700 hover:text-finance-600 font-medium">Pricing</Link>
+            <Link to="#features" className="text-gray-700 hover:text-primary font-medium">Features</Link>
+            <Link to="#testimonials" className="text-gray-700 hover:text-primary font-medium">Testimonials</Link>
+            <Link to="#pricing" className="text-gray-700 hover:text-primary font-medium">Pricing</Link>
           </nav>
           
           <div className="flex items-center gap-3">
             <Link to="/login">
-              <Button variant="outline" className="border-finance-600 text-finance-600 hover:bg-finance-50">
+              <Button variant="outline">
                 Sign in
               </Button>
             </Link>
             <Link to="/register">
-              <Button className="bg-finance-600 hover:bg-finance-700 text-white shadow-md">
+              <Button>
                 Sign up
               </Button>
             </Link>
@@ -42,7 +42,7 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-block px-4 py-1.5 bg-finance-50 text-finance-600 rounded-full text-sm font-medium mb-4"
+            className="inline-block px-4 py-1.5 bg-muted text-primary rounded-full text-sm font-medium mb-4"
           >
             Redefining personal finance management
           </motion.div>
@@ -53,7 +53,7 @@ const Index = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-4xl md:text-6xl font-display font-bold tracking-tight"
           >
-            Take control of your <span className="gradient-text">financial future</span>
+            Take control of your <span className="text-primary">financial future</span>
           </motion.h1>
           
           <motion.p
@@ -72,12 +72,12 @@ const Index = () => {
             className="flex flex-col sm:flex-row gap-4 justify-center mt-8"
           >
             <Link to="/register">
-              <Button size="lg" className="bg-finance-600 hover:bg-finance-700 text-white shadow-md px-8">
+              <Button size="lg">
                 Get started
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="border-gray-300">
+            <Button size="lg" variant="outline">
               Learn more
             </Button>
           </motion.div>
@@ -99,17 +99,17 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                icon: <PieChart className="h-10 w-10 text-finance-600" />,
+                icon: <PieChart className="h-10 w-10 text-primary" />,
                 title: "Budget Management",
                 description: "Create custom budgets and track your spending habits in real-time."
               },
               {
-                icon: <CreditCard className="h-10 w-10 text-finance-600" />,
+                icon: <CreditCard className="h-10 w-10 text-primary" />,
                 title: "Expense Tracking",
                 description: "Automatically categorize your transactions and see where your money goes."
               },
               {
-                icon: <BarChart3 className="h-10 w-10 text-finance-600" />,
+                icon: <BarChart3 className="h-10 w-10 text-primary" />,
                 title: "Financial Insights",
                 description: "Get personalized insights and recommendations to improve your financial health."
               }
@@ -122,7 +122,7 @@ const Index = () => {
                 viewport={{ once: true }}
                 className="bg-white p-8 rounded-2xl shadow-subtle hover:shadow-glass transition-all duration-300 border border-gray-100"
               >
-                <div className="bg-finance-50 w-16 h-16 rounded-lg flex items-center justify-center mb-6">
+                <div className="bg-muted w-16 h-16 rounded-lg flex items-center justify-center mb-6">
                   {feature.icon}
                 </div>
                 <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
@@ -134,16 +134,16 @@ const Index = () => {
       </section>
       
       {/* CTA Section */}
-      <section className="py-16 px-6 bg-finance-600 text-white">
+      <section className="py-16 px-6 bg-primary text-primary-foreground">
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-4">
             Ready to start your financial journey?
           </h2>
-          <p className="text-xl text-white/90 max-w-3xl mx-auto mb-8">
+          <p className="text-xl opacity-90 max-w-3xl mx-auto mb-8">
             Join thousands of users who are already transforming their financial future.
           </p>
           <Link to="/register">
-            <Button size="lg" className="bg-white text-finance-600 hover:bg-gray-100 shadow-lg px-8">
+            <Button size="lg" variant="secondary" className="shadow-lg">
               Get started now
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -157,13 +157,13 @@ const Index = () => {
           <div className="flex flex-col md:flex-row justify-between items-center mb-8">
             <Logo />
             <div className="flex gap-6 mt-6 md:mt-0">
-              <a href="#" className="text-gray-500 hover:text-finance-600">Terms</a>
-              <a href="#" className="text-gray-500 hover:text-finance-600">Privacy</a>
-              <a href="#" className="text-gray-500 hover:text-finance-600">Contact</a>
+              <a href="#" className="text-gray-500 hover:text-primary">Terms</a>
+              <a href="#" className="text-gray-500 hover:text-primary">Privacy</a>
+              <a href="#" className="text-gray-500 hover:text-primary">Contact</a>
             </div>
           </div>
           <div className="border-t border-gray-200 pt-8 text-center text-gray-500">
-            <p>© 2023 Finance. All rights reserved.</p>
+            <p>© 2023 Money Mentor. All rights reserved.</p>
           </div>
         </div>
       </footer>

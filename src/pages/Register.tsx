@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -7,17 +8,20 @@ import { signUp, getAuthErrorMessage } from "@/lib/firebase";
 import AuthLayout from "@/components/AuthLayout";
 import InputField from "@/components/InputField";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const Register = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [errors, setErrors] = useState<{
     fullName?: string;
     email?: string;
     password?: string;
     confirmPassword?: string;
+    terms?: string;
   }>({});
   const [isLoading, setIsLoading] = useState(false);
   
@@ -30,6 +34,7 @@ const Register = () => {
       email?: string;
       password?: string;
       confirmPassword?: string;
+      terms?: string;
     } = {};
     
     if (!fullName.trim()) {
@@ -52,6 +57,10 @@ const Register = () => {
       newErrors.confirmPassword = "Please confirm your password";
     } else if (password !== confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";
+    }
+    
+    if (!agreeToTerms) {
+      newErrors.terms = "You must agree to the terms and conditions";
     }
     
     setErrors(newErrors);
@@ -152,34 +161,36 @@ const Register = () => {
           icon={<Lock size={18} />}
         />
         
-        <div className="flex items-center">
-          <input
+        <div className="flex items-start space-x-2">
+          <Checkbox
             id="terms"
-            name="terms"
-            type="checkbox"
-            className="h-4 w-4 rounded border-gray-300 text-yellow-500 focus:ring-yellow-500"
-            required
+            checked={agreeToTerms}
+            onCheckedChange={(checked) => setAgreeToTerms(checked === true)}
+            className="mt-1"
           />
-          <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
+          <label htmlFor="terms" className="text-sm text-gray-700">
             I agree to the{" "}
-            <a href="#" className="text-yellow-600 hover:text-yellow-500">
+            <a href="#" className="text-primary hover:text-primary/80 font-medium">
               Terms of Service
             </a>{" "}
             and{" "}
-            <a href="#" className="text-yellow-600 hover:text-yellow-500">
+            <a href="#" className="text-primary hover:text-primary/80 font-medium">
               Privacy Policy
             </a>
+            {errors.terms && (
+              <p className="text-sm text-red-600 mt-1">{errors.terms}</p>
+            )}
           </label>
         </div>
         
         <Button
           type="submit"
-          className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-medium py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+          className="w-full"
           disabled={isLoading}
         >
           {isLoading ? (
             <div className="flex items-center gap-2">
-              <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin"></div>
               <span>Creating account...</span>
             </div>
           ) : (
@@ -194,7 +205,7 @@ const Register = () => {
             transition={{ delay: 0.5 }}
           >
             Already have an account?{" "}
-            <Link to="/login" className="text-yellow-600 hover:text-yellow-700 font-medium">
+            <Link to="/login" className="text-primary hover:text-primary/80 font-medium">
               Sign in
             </Link>
           </motion.p>
