@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -109,7 +108,7 @@ const Login = () => {
               id="remember-me"
               name="remember-me"
               type="checkbox"
-              className="h-4 w-4 rounded border-gray-300 text-finance-600 focus:ring-finance-500"
+              className="h-4 w-4 rounded border-gray-300 text-yellow-500 focus:ring-yellow-500"
             />
             <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
               Remember me
@@ -117,7 +116,7 @@ const Login = () => {
           </div>
           
           <div className="text-sm">
-            <a href="#" className="font-medium text-finance-600 hover:text-finance-500">
+            <a href="#" className="font-medium text-yellow-600 hover:text-yellow-500">
               Forgot your password?
             </a>
           </div>
@@ -125,12 +124,12 @@ const Login = () => {
         
         <Button
           type="submit"
-          className="w-full bg-finance-600 hover:bg-finance-700 text-white py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+          className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-medium py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
           disabled={isLoading}
         >
           {isLoading ? (
             <div className="flex items-center gap-2">
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
               <span>Signing in...</span>
             </div>
           ) : (
@@ -145,7 +144,7 @@ const Login = () => {
             transition={{ delay: 0.5 }}
           >
             Don't have an account?{" "}
-            <Link to="/register" className="text-finance-600 hover:text-finance-700 font-medium">
+            <Link to="/register" className="text-yellow-600 hover:text-yellow-700 font-medium">
               Create account
             </Link>
           </motion.p>

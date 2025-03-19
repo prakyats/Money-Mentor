@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -70,7 +69,6 @@ const Register = () => {
       const { user, error } = await signUp(email, password);
       
       if (user) {
-        // Could store additional user data in Firestore here if needed
         toast({
           title: "Registration successful",
           description: "Your account has been created!",
@@ -99,7 +97,7 @@ const Register = () => {
   return (
     <AuthLayout 
       title="Create your account" 
-      subtitle="Sign up to get started with Finance"
+      subtitle="Sign up to get started with Money Mentor"
     >
       <form onSubmit={handleSubmit} className="space-y-5 mt-8">
         <InputField
@@ -159,16 +157,16 @@ const Register = () => {
             id="terms"
             name="terms"
             type="checkbox"
-            className="h-4 w-4 rounded border-gray-300 text-finance-600 focus:ring-finance-500"
+            className="h-4 w-4 rounded border-gray-300 text-yellow-500 focus:ring-yellow-500"
             required
           />
           <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
             I agree to the{" "}
-            <a href="#" className="text-finance-600 hover:text-finance-500">
+            <a href="#" className="text-yellow-600 hover:text-yellow-500">
               Terms of Service
             </a>{" "}
             and{" "}
-            <a href="#" className="text-finance-600 hover:text-finance-500">
+            <a href="#" className="text-yellow-600 hover:text-yellow-500">
               Privacy Policy
             </a>
           </label>
@@ -176,12 +174,12 @@ const Register = () => {
         
         <Button
           type="submit"
-          className="w-full bg-finance-600 hover:bg-finance-700 text-white py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+          className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-medium py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
           disabled={isLoading}
         >
           {isLoading ? (
             <div className="flex items-center gap-2">
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
               <span>Creating account...</span>
             </div>
           ) : (
@@ -196,7 +194,7 @@ const Register = () => {
             transition={{ delay: 0.5 }}
           >
             Already have an account?{" "}
-            <Link to="/login" className="text-finance-600 hover:text-finance-700 font-medium">
+            <Link to="/login" className="text-yellow-600 hover:text-yellow-700 font-medium">
               Sign in
             </Link>
           </motion.p>
