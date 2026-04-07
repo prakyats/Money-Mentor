@@ -1,0 +1,29 @@
+{
+  "name": "money-mentor-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "backend",
+    "landing",
+    "Mdashboard",
+    "chatbot"
+  ],
+  "scripts": {
+    "install:all": "npm install --workspaces --include-workspace-root",
+    "dev:backend": "npm run start:dev --workspace backend",
+    "dev:landing": "npm run dev --workspace landing -- --host 0.0.0.0 --port 5173",
+    "dev:dashboard": "npm run dev --workspace Mdashboard -- --host 0.0.0.0 --port 5174",
+    "dev:chatbot": "npm run dev --workspace chatbot",
+    "build": "npm run build --workspaces",
+    "build:backend": "npm run build --workspace backend",
+    "build:landing": "npm run build --workspace landing",
+    "build:dashboard": "npm run build --workspace Mdashboard",
+    "build:chatbot": "npm run build --workspace chatbot",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspace backend"
+  },
+  "engines": {
+    "node": ">=18.18.0",
+    "npm": ">=9.0.0"
+  }
+}
