@@ -9,10 +9,10 @@ The system is designed to run on PostgreSQL through Prisma and remain portable a
 
 ## Repository Structure
 
-- `backend/` - NestJS + Prisma API
-- `landing/` - React/Vite landing and auth UI
-- `Mdashboard/` - React/Vite authenticated dashboard UI
-- `chatbot/` - React/Vite chatbot UI
+- `apps/backend/` - NestJS + Prisma API
+- `apps/landing/` - React/Vite landing and auth UI
+- `apps/dashboard/` - React/Vite authenticated dashboard UI
+- `apps/chatbot/` - React/Vite chatbot UI
 - `render.yaml` - Render deployment blueprint for backend
 
 ## Project Documentation
@@ -81,7 +81,7 @@ npm run test
 ### 1. Backend setup
 
 ```bash
-cd backend
+cd apps/backend
 npm install
 ```
 
@@ -91,7 +91,7 @@ Create local env file:
 cp .env.example .env
 ```
 
-Set at minimum in `backend/.env`:
+Set at minimum in `apps/backend/.env`:
 
 ```env
 NODE_ENV=development
@@ -125,12 +125,12 @@ Health check:
 ### 2. Landing app setup
 
 ```bash
-cd landing
+cd apps/landing
 npm install
 npm run dev -- --host 0.0.0.0 --port 5173
 ```
 
-Optional env (`landing/.env`):
+Optional env (`apps/landing/.env`):
 
 ```env
 VITE_API_BASE_URL=http://localhost:4000
@@ -140,12 +140,12 @@ VITE_DASHBOARD_URL=http://localhost:5174
 ### 3. Dashboard app setup
 
 ```bash
-cd Mdashboard
+cd apps/dashboard
 npm install
 npm run dev -- --host 0.0.0.0 --port 5174
 ```
 
-Optional env (`Mdashboard/.env`):
+Optional env (`apps/dashboard/.env`):
 
 ```env
 VITE_API_BASE_URL=http://localhost:4000
@@ -155,7 +155,7 @@ VITE_LANDING_LOGIN_URL=http://localhost:5173/login
 ### 4. Chatbot app setup
 
 ```bash
-cd chatbot
+cd apps/chatbot
 npm install
 npm run dev
 ```
@@ -179,28 +179,28 @@ npm run build
 ### Backend
 
 ```bash
-cd backend
+cd apps/backend
 npm run build
 ```
 
 ### Landing
 
 ```bash
-cd landing
+cd apps/landing
 npm run build
 ```
 
 ### Dashboard
 
 ```bash
-cd Mdashboard
+cd apps/dashboard
 npm run build
 ```
 
 ### Chatbot
 
 ```bash
-cd chatbot
+cd apps/chatbot
 npm run build
 ```
 

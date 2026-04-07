@@ -49,16 +49,66 @@ function App() {
   const [expenses, setExpenses] = React.useState([]);
   const [transactionsError, setTransactionsError] = React.useState('');
 
-  const fetchTransactions = React.useCallback(async (accessToken) => {
-    const response = await axios.get(`${API_BASE_URL}/api/v1/transactions`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+  const clearSession = React.useCallback(() => {
+    localStorage.removeItem(AUTH_STORAGE_KEYS.accessToken);
+    localStorage.removeItem(AUTH_STORAGE_KEYS.refreshToken);
+    localStorage.removeItem(AUTH_STORAGE_KEYS.user);
+  }, []);
+
+  const refreshAccessToken = React.useCallback(async () => {
+    const refreshToken = localStorage.getItem(AUTH_STORAGE_KEYS.refreshToken);
+    if (!refreshToken) {
+      clearSession();
+      throw new Error('SESSION_EXPIRED');
+    }
+
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/v1/auth/refresh`, {
+        refreshToken,
+      });
+
+      localStorage.setItem(AUTH_STORAGE_KEYS.accessToken, response.data.accessToken);
+      localStorage.setItem(AUTH_STORAGE_KEYS.refreshToken, response.data.refreshToken);
+      return response.data.accessToken;
+    } catch {
+      clearSession();
+      throw new Error('SESSION_EXPIRED');
+    }
+  }, [clearSession]);
+
+  const requestWithAutoRefresh = React.useCallback(
+    async (requestFactory) => {
+      const accessToken = localStorage.getItem(AUTH_STORAGE_KEYS.accessToken);
+      if (!accessToken) {
+        throw new Error('SESSION_EXPIRED');
+      }
+
+      try {
+        return await requestFactory(accessToken);
+      } catch (error) {
+        if (error?.response?.status !== 401) {
+          throw error;
+        }
+
+        const nextAccessToken = await refreshAccessToken();
+        return requestFactory(nextAccessToken);
+      }
+    },
+    [refreshAccessToken],
+  );
+
+  const fetchTransactions = React.useCallback(async () => {
+    const response = await requestWithAutoRefresh((accessToken) =>
+      axios.get(`${API_BASE_URL}/api/v1/transactions`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }),
+    );
 
     const mapped = response.data.map(mapTransactionToExpense);
     setExpenses(mapped);
-  }, []);
+  }, [requestWithAutoRefresh]);
 
   React.useEffect(() => {
     if (isDarkMode) {
@@ -78,26 +128,26 @@ function App() {
       }
 
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/v1/users/me`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const response = await requestWithAutoRefresh((token) =>
+          axios.get(`${API_BASE_URL}/api/v1/users/me`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+        );
 
         localStorage.setItem(AUTH_STORAGE_KEYS.user, JSON.stringify(response.data));
-        await fetchTransactions(accessToken);
+        await fetchTransactions();
         setTransactionsError('');
         setAuthChecked(true);
       } catch {
-        localStorage.removeItem(AUTH_STORAGE_KEYS.accessToken);
-        localStorage.removeItem(AUTH_STORAGE_KEYS.refreshToken);
-        localStorage.removeItem(AUTH_STORAGE_KEYS.user);
+        clearSession();
         window.location.href = LANDING_LOGIN_URL;
       }
     };
 
     bootstrapSession();
-  }, [fetchTransactions]);
+  }, [clearSession, fetchTransactions, requestWithAutoRefresh]);
 
   const handleAddExpense = async (newExpense) => {
     const accessToken = localStorage.getItem(AUTH_STORAGE_KEYS.accessToken);
@@ -114,15 +164,21 @@ function App() {
         note: `[${newExpense.category}] ${newExpense.description}`,
       };
 
-      const response = await axios.post(`${API_BASE_URL}/api/v1/transactions`, payload, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const response = await requestWithAutoRefresh((token) =>
+        axios.post(`${API_BASE_URL}/api/v1/transactions`, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+      );
 
       setExpenses((prev) => [mapTransactionToExpense(response.data), ...prev]);
       setTransactionsError('');
-    } catch {
+    } catch (error) {
+      if (error?.message === 'SESSION_EXPIRED') {
+        window.location.href = LANDING_LOGIN_URL;
+        return;
+      }
       setTransactionsError('Could not save expense. Please try again.');
     }
   };

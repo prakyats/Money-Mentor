@@ -2,10 +2,10 @@
 
 ## Monorepo Layout
 
-- `backend/`: NestJS API with Prisma/PostgreSQL
-- `landing/`: Public auth and onboarding frontend
-- `Mdashboard/`: Authenticated finance dashboard frontend
-- `chatbot/`: Assistant UI frontend
+- `apps/backend/`: NestJS API with Prisma/PostgreSQL
+- `apps/landing/`: Public auth and onboarding frontend
+- `apps/dashboard/`: Authenticated finance dashboard frontend
+- `apps/chatbot/`: Assistant UI frontend
 
 ## Backend Layers
 

@@ -2,7 +2,7 @@ services:
   - type: web
     name: money-mentor-backend
     runtime: node
-    rootDir: backend
+    rootDir: apps/backend
     plan: starter
     buildCommand: npm ci && npm run prisma:generate && npm run build
     startCommand: npm run prisma:deploy && npm run start

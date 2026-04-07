@@ -38,7 +38,7 @@ npm run test
 Backend specific:
 
 ```bash
-cd backend
+cd apps/backend
 npm run prisma:generate
 npm run prisma:migrate -- --name verify
 npm run start:dev

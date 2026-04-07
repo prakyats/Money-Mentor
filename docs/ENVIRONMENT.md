@@ -1,6 +1,6 @@
 # Environment Variables Reference
 
-## Backend (`backend/.env`)
+## Backend (`apps/backend/.env`)
 
 Required:
 
@@ -24,14 +24,14 @@ Example local database URL:
 
 `postgresql://postgres:your_password@localhost:5432/moneymentor`
 
-## Landing (`landing/.env`)
+## Landing (`apps/landing/.env`)
 
 Optional:
 
 - `VITE_API_BASE_URL`
 - `VITE_DASHBOARD_URL`
 
-## Dashboard (`Mdashboard/.env`)
+## Dashboard (`apps/dashboard/.env`)
 
 Optional:
 
