@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: money-mentor-backend
+    runtime: node
+    rootDir: backend
+    plan: starter
+    buildCommand: npm ci && npm run prisma:generate && npm run build
+    startCommand: npm run prisma:deploy && npm run start
+    healthCheckPath: /docs
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: JWT_ACCESS_EXPIRES_IN
+        value: 15m
+      - key: JWT_REFRESH_EXPIRES_IN
+        value: 7d
+      - key: CORS_ORIGIN
+        value: http://localhost:5173,https://your-app-name.vercel.app,https://*.vercel.app
+      - key: SENTRY_DSN
+        sync: false

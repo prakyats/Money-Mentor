@@ -1,0 +1,92 @@
+Money Mentor Backend - Required Production Inputs
+=================================================
+
+Please provide these values later (do NOT commit real secrets to git).
+
+1) Database
+-----------
+DATABASE_URL=
+Format example:
+postgresql://username:password@host:5432/database_name
+
+Notes:
+- Must be production Postgres connection string.
+- SSL requirement (yes/no):
+- Connection pool requirements:
+
+2) JWT/Auth Secrets
+-------------------
+JWT_ACCESS_SECRET=
+JWT_REFRESH_SECRET=
+JWT_ACCESS_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
+
+Notes:
+- Use strong random secrets (32+ chars).
+- Store only in Render environment variables.
+
+3) CORS Origins
+---------------
+CORS_ORIGIN=
+Expected format (comma-separated):
+http://localhost:5173,https://your-app-name.vercel.app,https://*.vercel.app
+
+Your final production values:
+- Primary Vercel domain:
+- Preview domain policy:
+
+4) Sentry (Optional but recommended)
+------------------------------------
+SENTRY_DSN=
+
+Notes:
+- If not available now, leave empty and add later.
+
+5) Admin Bootstrap (one-time)
+-----------------------------
+ADMIN_EMAIL=
+ADMIN_PASSWORD=
+ADMIN_FULL_NAME=Platform Admin
+
+Notes:
+- ADMIN_PASSWORD must be at least 12 characters.
+- After first deploy, run admin seed command once.
+
+6) Render Deployment Inputs
+---------------------------
+Render service name:
+Render region:
+Render plan:
+Auto-deploy branch:
+
+7) Infrastructure Ownership
+---------------------------
+Who will manage these in production?
+- Render env vars owner:
+- DB owner:
+- DNS/domain owner:
+- Incident alert owner:
+
+8) Compliance / Security Preferences
+------------------------------------
+- Data retention policy:
+- Audit log retention:
+- Backup frequency:
+- IP allowlist needed (yes/no):
+- Any regulatory requirements (GDPR, etc):
+
+9) Optional External Integrations
+---------------------------------
+If used later, provide keys:
+- OpenAI API key (for AI insights):
+- Email provider key (SendGrid/Resend/etc):
+- SMS provider key (Twilio/etc):
+
+10) Sign-off Checklist
+----------------------
+[ ] Production DATABASE_URL provided
+[ ] JWT secrets provided
+[ ] CORS origins finalized
+[ ] Admin seed credentials provided
+[ ] SENTRY_DSN provided (or explicitly deferred)
+[ ] Render deployment details provided
