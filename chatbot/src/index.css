@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Animation for typing indicator dots */
+.typing-dot {
+  @apply h-2 w-2 rounded-full animate-pulse;
+}
+
+.animation-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animation-delay-400 {
+  animation-delay: 0.4s;
+}
+
+/* Chat bubble animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+[data-testid^="message-"] {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+/* Chat container animations */
+.chat-container-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.chat-container-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.chat-container-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.chat-container-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 300ms, transform 300ms;
+}
