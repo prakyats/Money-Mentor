@@ -1,6 +1,6 @@
 // src/contexts/ChatContext.tsx
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode } from 'react';
 import { ChatContextType, ChatMessage, MessageType } from '../types/chat';
 import { generateId, generateBotResponse, getTypingDelay } from '../utils/chatUtils';
 

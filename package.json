@@ -6,7 +6,8 @@
     "apps/backend",
     "apps/landing",
     "apps/dashboard",
-    "apps/chatbot"
+    "apps/chatbot",
+    "packages/shared"
   ],
   "scripts": {
     "install:all": "npm install --workspaces --include-workspace-root",
@@ -14,7 +15,7 @@
     "dev:landing": "npm run dev --workspace money-mentor-landing -- --host 0.0.0.0 --port 5173",
     "dev:dashboard": "npm run dev --workspace money-mentor-dashboard -- --host 0.0.0.0 --port 5174",
     "dev:chatbot": "npm run dev --workspace money-mentor-chatbot",
-    "build": "npm run build --workspaces",
+    "build": "npm run build --workspaces --if-present",
     "build:backend": "npm run build --workspace money-mentor-backend",
     "build:landing": "npm run build --workspace money-mentor-landing",
     "build:dashboard": "npm run build --workspace money-mentor-dashboard",

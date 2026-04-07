@@ -13,6 +13,7 @@ The system is designed to run on PostgreSQL through Prisma and remain portable a
 - `apps/landing/` - React/Vite landing and auth UI
 - `apps/dashboard/` - React/Vite authenticated dashboard UI
 - `apps/chatbot/` - React/Vite chatbot UI
+- `packages/shared/` - shared client constants and API contract helpers
 - `render.yaml` - Render deployment blueprint for backend
 
 ## Project Documentation
@@ -69,6 +70,7 @@ npm run test
 - Clean layering: controllers -> services -> repositories -> Prisma
 - Stateless API behavior (safe for hosted environments and pooling)
 - Database-host agnostic inside PostgreSQL ecosystem
+- Shared frontend constants live in `packages/shared` to prevent contract drift
 
 ## Prerequisites
 

@@ -7,7 +7,7 @@ import { ExpensePage } from './pages/ExpensePage';
 import { BudgetPage } from './pages/BudgetPage';
 import { InvestmentPage } from './pages/InvestmentPage';
 import { CalculatorPage } from './pages/CalculatorPage';
-import { API_BASE_URL, AUTH_STORAGE_KEYS, LANDING_LOGIN_URL } from './config/api';
+import { API_BASE_URL, API_PATHS, AUTH_STORAGE_KEYS, LANDING_LOGIN_URL } from './config/api';
 
 const parseExpenseNote = (note) => {
   if (!note) {
@@ -63,7 +63,7 @@ function App() {
     }
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/v1/auth/refresh`, {
+      const response = await axios.post(`${API_BASE_URL}${API_PATHS.auth.refresh}`, {
         refreshToken,
       });
 
@@ -99,7 +99,7 @@ function App() {
 
   const fetchTransactions = React.useCallback(async () => {
     const response = await requestWithAutoRefresh((accessToken) =>
-      axios.get(`${API_BASE_URL}/api/v1/transactions`, {
+      axios.get(`${API_BASE_URL}${API_PATHS.transactions.base}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -129,7 +129,7 @@ function App() {
 
       try {
         const response = await requestWithAutoRefresh((token) =>
-          axios.get(`${API_BASE_URL}/api/v1/users/me`, {
+          axios.get(`${API_BASE_URL}${API_PATHS.users.me}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -165,7 +165,7 @@ function App() {
       };
 
       const response = await requestWithAutoRefresh((token) =>
-        axios.post(`${API_BASE_URL}/api/v1/transactions`, payload, {
+        axios.post(`${API_BASE_URL}${API_PATHS.transactions.base}`, payload, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

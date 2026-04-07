@@ -6,6 +6,7 @@
 - `apps/landing/`: Public auth and onboarding frontend
 - `apps/dashboard/`: Authenticated finance dashboard frontend
 - `apps/chatbot/`: Assistant UI frontend
+- `packages/shared/`: Shared frontend constants and API path contracts
 
 ## Backend Layers
 
