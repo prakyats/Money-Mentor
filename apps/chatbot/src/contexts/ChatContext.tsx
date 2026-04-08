@@ -6,6 +6,17 @@ import { generateId, generateBotResponse, getTypingDelay } from '../utils/chatUt
 
 export const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
+const THEME_STORAGE_KEY = 'money-mentor-chat-theme';
+
+const getInitialTheme = (): 'dark' | 'light' => {
+  if (typeof window === 'undefined') {
+    return 'dark';
+  }
+
+  const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+  return storedTheme === 'light' ? 'light' : 'dark';
+};
+
 export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -17,6 +28,23 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   ]);
   const [isTyping, setIsTyping] = useState(false);
   const [minimized, setMinimized] = useState(true);
+  const [theme, setTheme] = useState<'dark' | 'light'>(getInitialTheme);
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+  }, [theme]);
+
+  React.useEffect(() => {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    document.documentElement.dataset.chatTheme = theme;
+  }, [theme]);
 
   const addMessage = async (text: string, type: MessageType) => {
     const newMessage: ChatMessage = {
@@ -67,6 +95,10 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setMinimized(prev => !prev);
   };
 
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
   return (
     <ChatContext.Provider value={{
       messages,
@@ -74,7 +106,9 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       addMessage,
       clearMessages,
       minimized,
-      toggleMinimized
+      toggleMinimized,
+      theme,
+      toggleTheme,
     }}>
       {children}
     </ChatContext.Provider>

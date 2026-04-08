@@ -4,7 +4,7 @@ import ChatBot from './components/ChatBot';
 
 function App() {
   return (
-    <div className=" flex relative size-fit">
+    <div className="relative size-fit min-h-screen w-full">
       <ChatProvider>
         <ChatBot />
       </ChatProvider>

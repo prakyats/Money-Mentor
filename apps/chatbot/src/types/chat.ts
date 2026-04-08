@@ -14,4 +14,6 @@ export interface ChatContextType {
   clearMessages: () => void;
   minimized: boolean;
   toggleMinimized: () => void;
+  theme: 'dark' | 'light';
+  toggleTheme: () => void;
 }

@@ -285,7 +285,7 @@ function App() {
 
   if (!shouldRenderDashboard) {
     return (
-      <div className="min-h-screen bg-dark-100 text-white flex items-center justify-center">
+      <div className="mm-dashboard flex min-h-screen items-center justify-center">
         <p className="text-sm text-gray-300">Checking your session...</p>
       </div>
     );
@@ -293,7 +293,7 @@ function App() {
 
   return (
     <Router>
-      <div className={`flex min-h-screen overflow-x-hidden ${isDarkMode ? 'bg-dark-100' : 'bg-gray-100'}`}>
+      <div className={`mm-dashboard flex h-screen min-h-screen overflow-hidden md:grid md:grid-cols-[16rem_minmax(0,1fr)] ${isDarkMode ? 'bg-dark-100' : 'bg-gray-100'}`}>
         <Sidebar 
           isDarkMode={isDarkMode} 
           toggleDarkMode={() => setIsDarkMode(!isDarkMode)}
@@ -304,8 +304,8 @@ function App() {
           onSignOut={signOut}
         />
         
-        <main className="flex-1 p-4 pt-20 sm:p-6 sm:pt-6 lg:p-8 md:ml-64 md:pt-8 transition-all duration-300">
-          <div className="max-w-7xl mx-auto">
+        <main className="relative z-10 min-h-0 flex-1 overflow-y-auto p-4 pt-20 transition-all duration-300 sm:p-6 sm:pt-6 lg:p-8 md:pt-8">
+          <div className="w-full">
             {transactionsError ? (
               <div className="mb-4 rounded-lg border border-yellow-400/30 bg-yellow-400/10 px-4 py-3 text-sm text-yellow-100">
                 {transactionsError}

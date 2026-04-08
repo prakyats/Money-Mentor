@@ -1,4 +1,5 @@
 import React from 'react';
+import { useChatContext } from '../../hooks/useChatContext';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
 
 interface ChatMessageProps {
@@ -6,6 +7,7 @@ interface ChatMessageProps {
 }
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
+  const { theme } = useChatContext();
   const isBot = message.type === 'bot';
   
   return (
@@ -16,8 +18,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       <div 
         className={`max-w-[80%] px-4 py-3 rounded-2xl ${
           isBot 
-            ? 'bg-gray-100 text-gray-800 rounded-tl-none' 
-            : 'bg-yellow-400 text-black rounded-tr-none'
+            ? theme === 'dark'
+              ? 'border border-white/8 bg-white/5 text-slate-100 rounded-tl-none'
+              : 'border border-slate-200 bg-white text-slate-800 rounded-tl-none'
+            : 'bg-yellow-400 text-black rounded-tr-none shadow-[0_8px_24px_rgba(250,204,21,0.18)]'
         }`}
       >
         <p className="text-sm whitespace-pre-wrap break-words">{message.text}</p>
