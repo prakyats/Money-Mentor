@@ -16,9 +16,12 @@ export const BudgetAlerts = ({ profile, expenses, isDarkMode }) => {
     })
     .reduce((sum, expense) => sum + expense.amount, 0);
 
-  const percentageUsed = (currentMonthExpenses / monthlyBudget) * 100;
+  const percentageUsed = monthlyBudget > 0 ? (currentMonthExpenses / monthlyBudget) * 100 : 0;
   const remainingBudget = monthlyBudget - currentMonthExpenses;
-  const daysLeftInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate() - new Date().getDate();
+  const daysLeftInMonth = Math.max(
+    1,
+    new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate() - new Date().getDate(),
+  );
 
   const getAlertLevel = () => {
     if (percentageUsed >= 90) return { color: 'red', message: 'Critical: You have exceeded or are very close to your budget limit!' };
@@ -40,6 +43,12 @@ export const BudgetAlerts = ({ profile, expenses, isDarkMode }) => {
         <Bell className="w-6 h-6 mr-2 text-yellow-400" />
         Budget Alerts
       </h2>
+
+      {monthlyBudget <= 0 ? (
+        <div className={`mb-6 rounded-lg border px-4 py-3 text-sm ${isDarkMode ? 'border-dark-200 bg-dark-200/60 text-gray-300' : 'border-gray-200 bg-gray-50 text-gray-600'}`}>
+          Configure your financial profile to unlock budget alerts and daily spending guidance.
+        </div>
+      ) : null}
 
       <div className="space-y-6">
         <div className={`p-4 rounded-lg border ${

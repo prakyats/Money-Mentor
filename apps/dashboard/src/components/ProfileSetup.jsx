@@ -3,7 +3,23 @@ import { motion } from 'framer-motion';
 import { Save, IndianRupee } from 'lucide-react';
 
 export const ProfileSetup = ({ profile, onSave, isDarkMode }) => {
-  const [formData, setFormData] = React.useState(profile);
+  const [formData, setFormData] = React.useState({
+    annualIncome: 0,
+    savingsGoal: 20,
+    age: 25,
+    riskTolerance: 'moderate',
+    ...profile,
+  });
+
+  React.useEffect(() => {
+    setFormData({
+      annualIncome: 0,
+      savingsGoal: 20,
+      age: 25,
+      riskTolerance: 'moderate',
+      ...profile,
+    });
+  }, [profile]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,6 +45,8 @@ export const ProfileSetup = ({ profile, onSave, isDarkMode }) => {
             <span className="absolute left-3 top-2 text-gray-400">₹</span>
             <input
               type="number"
+              min="0"
+              step="1"
               value={formData.annualIncome}
               onChange={(e) => setFormData({ ...formData, annualIncome: Number(e.target.value) })}
               className={`w-full pl-8 p-2 border rounded-md ${
@@ -48,6 +66,8 @@ export const ProfileSetup = ({ profile, onSave, isDarkMode }) => {
           </label>
           <input
             type="number"
+            min="18"
+            step="1"
             value={formData.age}
             onChange={(e) => setFormData({ ...formData, age: Number(e.target.value) })}
             className={`w-full p-2 border rounded-md ${
@@ -71,6 +91,7 @@ export const ProfileSetup = ({ profile, onSave, isDarkMode }) => {
               type="number"
               min="0"
               max="100"
+              step="1"
               value={formData.savingsGoal}
               onChange={(e) => setFormData({ ...formData, savingsGoal: Number(e.target.value) })}
               className={`w-full pr-8 p-2 border rounded-md ${

@@ -11,12 +11,21 @@ export const TVMCalculator = ({ isDarkMode }) => {
   });
 
   const [futureValue, setFutureValue] = React.useState(null);
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   const calculateFutureValue = () => {
     const P = parseFloat(formData.principal);
     const r = parseFloat(formData.rate) / 100;
     const t = parseFloat(formData.time);
     const n = parseFloat(formData.compoundingFrequency);
+
+    if (!P || !r || !t || !n || P <= 0 || r <= 0 || t <= 0 || n <= 0) {
+      setErrorMessage('Enter positive values for principal, rate, and time period.');
+      setFutureValue(null);
+      return;
+    }
+
+    setErrorMessage('');
 
     const FV = P * Math.pow(1 + r/n, n * t);
     setFutureValue(FV);
@@ -45,6 +54,7 @@ export const TVMCalculator = ({ isDarkMode }) => {
           </label>
           <input
             type="number"
+            min="1"
             value={formData.principal}
             onChange={(e) => setFormData({ ...formData, principal: e.target.value })}
             className={`w-full p-2 border rounded-md ${
@@ -62,6 +72,7 @@ export const TVMCalculator = ({ isDarkMode }) => {
           </label>
           <input
             type="number"
+            min="0.01"
             step="0.01"
             value={formData.rate}
             onChange={(e) => setFormData({ ...formData, rate: e.target.value })}
@@ -80,6 +91,7 @@ export const TVMCalculator = ({ isDarkMode }) => {
           </label>
           <input
             type="number"
+            min="0.1"
             step="0.1"
             value={formData.time}
             onChange={(e) => setFormData({ ...formData, time: e.target.value })}
@@ -122,6 +134,12 @@ export const TVMCalculator = ({ isDarkMode }) => {
           Calculate Future Value
         </motion.button>
       </form>
+
+      {errorMessage ? (
+        <div className={`mt-4 rounded-lg border px-4 py-3 text-sm ${isDarkMode ? 'border-red-400/30 bg-red-500/10 text-red-200' : 'border-red-200 bg-red-50 text-red-700'}`}>
+          {errorMessage}
+        </div>
+      ) : null}
 
       {futureValue !== null && (
         <motion.div

@@ -8,6 +8,7 @@ function Register() {
     const usernameRef = useRef();
     const mailRef = useRef();
     const passwordRef = useRef();
+    const confirmPasswordRef = useRef();
     const [loading, setLoading] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState('');
 
@@ -19,6 +20,7 @@ function Register() {
         const fullName = usernameRef.current?.value.trim();
         const email = mailRef.current?.value.trim().toLowerCase();
         const password = passwordRef.current?.value;
+        const confirmPassword = confirmPasswordRef.current?.value;
 
         if (!fullName || fullName.length < 2) {
             setErrorMessage('Full name must be at least 2 characters.');
@@ -33,6 +35,11 @@ function Register() {
 
         if (!password || password.length < 8) {
             setErrorMessage("Password must be at least 8 characters long.");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setErrorMessage('Passwords do not match.');
             return;
         }
 
@@ -68,11 +75,16 @@ function Register() {
             localStorage.setItem(AUTH_STORAGE_KEYS.accessToken, data.accessToken);
             localStorage.setItem(AUTH_STORAGE_KEYS.refreshToken, data.refreshToken);
             localStorage.setItem(AUTH_STORAGE_KEYS.user, JSON.stringify(data.user));
-            const redirectUrl = new URL(DASHBOARD_URL);
-            redirectUrl.searchParams.set('accessToken', data.accessToken);
-            redirectUrl.searchParams.set('refreshToken', data.refreshToken);
-            redirectUrl.searchParams.set('user', btoa(encodeURIComponent(JSON.stringify(data.user))));
-            window.location.href = redirectUrl.toString();
+                        window.name = `mm-auth:${btoa(
+                            encodeURIComponent(
+                                JSON.stringify({
+                                    accessToken: data.accessToken,
+                                    refreshToken: data.refreshToken,
+                                    user: data.user,
+                                }),
+                            ),
+                        )}`;
+                        window.location.href = DASHBOARD_URL;
         } catch (error) {
             console.error("Signup error:", error);
             if (error?.name === 'AbortError') {
@@ -126,6 +138,18 @@ function Register() {
                             type="password"
                             id="password"
                             ref={passwordRef}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                            required
+                        />
+                    </div>
+                    <div className="mb-6">
+                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                            Confirm Password
+                        </label>
+                        <input
+                            ref={confirmPasswordRef}
+                            type="password"
+                            id="confirmPassword"
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                             required
                         />

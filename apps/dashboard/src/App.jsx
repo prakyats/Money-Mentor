@@ -46,10 +46,12 @@ const mapTransactionToExpense = (transaction) => {
 };
 
 function App() {
+  const isDevelopmentPreview = import.meta.env.DEV;
   const [isDarkMode, setIsDarkMode] = React.useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const [authChecked, setAuthChecked] = React.useState(false);
   const [profile, setProfile] = React.useState(DEFAULT_PROFILE);
+  const [currentUser, setCurrentUser] = React.useState(null);
   const [expenses, setExpenses] = React.useState([]);
   const [transactionsError, setTransactionsError] = React.useState('');
 
@@ -78,6 +80,17 @@ function App() {
     localStorage.removeItem(AUTH_STORAGE_KEYS.refreshToken);
     localStorage.removeItem(AUTH_STORAGE_KEYS.user);
   }, []);
+
+  const signOut = React.useCallback(() => {
+    const profileStorageKey = getProfileStorageKey();
+    if (profileStorageKey) {
+      localStorage.removeItem(profileStorageKey);
+    }
+
+    clearSession();
+    window.name = '';
+    window.location.href = LANDING_LOGIN_URL;
+  }, [clearSession, getProfileStorageKey]);
 
   const refreshAccessToken = React.useCallback(async () => {
     const refreshToken = localStorage.getItem(AUTH_STORAGE_KEYS.refreshToken);
@@ -144,31 +157,34 @@ function App() {
 
   React.useEffect(() => {
     const bootstrapSession = async () => {
-      const params = new URLSearchParams(window.location.search);
-      const accessTokenFromUrl = params.get('accessToken');
-      const refreshTokenFromUrl = params.get('refreshToken');
-      const userFromUrl = params.get('user');
+      if (window.name?.startsWith('mm-auth:')) {
+        try {
+          const payload = JSON.parse(decodeURIComponent(atob(window.name.slice(8))));
 
-      if (accessTokenFromUrl && refreshTokenFromUrl) {
-        localStorage.setItem(AUTH_STORAGE_KEYS.accessToken, accessTokenFromUrl);
-        localStorage.setItem(AUTH_STORAGE_KEYS.refreshToken, refreshTokenFromUrl);
+          if (payload?.accessToken && payload?.refreshToken) {
+            localStorage.setItem(AUTH_STORAGE_KEYS.accessToken, payload.accessToken);
+            localStorage.setItem(AUTH_STORAGE_KEYS.refreshToken, payload.refreshToken);
 
-        if (userFromUrl) {
-          try {
-            const decodedUser = JSON.parse(decodeURIComponent(atob(userFromUrl)));
-            localStorage.setItem(AUTH_STORAGE_KEYS.user, JSON.stringify(decodedUser));
-          } catch {
-            // Ignore malformed user payload and continue with token-based bootstrap.
+            if (payload.user) {
+              localStorage.setItem(AUTH_STORAGE_KEYS.user, JSON.stringify(payload.user));
+            }
           }
+        } catch {
+          // Ignore malformed handoff payload and fall back to stored session.
+        } finally {
+          window.name = '';
         }
-
-        const cleanPath = `${window.location.origin}${window.location.pathname}${window.location.hash}`;
-        window.history.replaceState({}, document.title, cleanPath);
       }
 
       const accessToken = localStorage.getItem(AUTH_STORAGE_KEYS.accessToken);
 
       if (!accessToken) {
+        if (isDevelopmentPreview) {
+          setTransactionsError('Local preview mode: sign in from landing to load live account data.');
+          setCurrentUser({ fullName: 'Preview User', email: 'local.preview@moneymentor.dev' });
+          setAuthChecked(true);
+          return;
+        }
         window.location.href = LANDING_LOGIN_URL;
         return;
       }
@@ -182,6 +198,7 @@ function App() {
           }),
         );
 
+        setCurrentUser(response.data);
         localStorage.setItem(AUTH_STORAGE_KEYS.user, JSON.stringify(response.data));
 
         const profileStorageKey = getProfileStorageKey();
@@ -203,13 +220,19 @@ function App() {
         setTransactionsError('');
         setAuthChecked(true);
       } catch {
+        if (isDevelopmentPreview) {
+          setTransactionsError('Local preview mode: could not load live session data.');
+          setCurrentUser({ fullName: 'Preview User', email: 'local.preview@moneymentor.dev' });
+          setAuthChecked(true);
+          return;
+        }
         clearSession();
         window.location.href = LANDING_LOGIN_URL;
       }
     };
 
     bootstrapSession();
-  }, [clearSession, fetchTransactions, getProfileStorageKey, requestWithAutoRefresh]);
+  }, [clearSession, fetchTransactions, getProfileStorageKey, isDevelopmentPreview, requestWithAutoRefresh]);
 
   React.useEffect(() => {
     if (!authChecked) {
@@ -258,7 +281,9 @@ function App() {
     }
   };
 
-  if (!authChecked) {
+  const shouldRenderDashboard = authChecked || isDevelopmentPreview;
+
+  if (!shouldRenderDashboard) {
     return (
       <div className="min-h-screen bg-dark-100 text-white flex items-center justify-center">
         <p className="text-sm text-gray-300">Checking your session...</p>
@@ -268,18 +293,21 @@ function App() {
 
   return (
     <Router>
-      <div className={`flex min-h-screen ${isDarkMode ? 'bg-dark-100' : 'bg-gray-100'}`}>
+      <div className={`flex min-h-screen overflow-x-hidden ${isDarkMode ? 'bg-dark-100' : 'bg-gray-100'}`}>
         <Sidebar 
           isDarkMode={isDarkMode} 
           toggleDarkMode={() => setIsDarkMode(!isDarkMode)}
           isOpen={isSidebarOpen}
           onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+          onClose={() => setIsSidebarOpen(false)}
+          user={currentUser}
+          onSignOut={signOut}
         />
         
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 md:ml-64 transition-all duration-300">
+        <main className="flex-1 p-4 pt-20 sm:p-6 sm:pt-6 lg:p-8 md:ml-64 md:pt-8 transition-all duration-300">
           <div className="max-w-7xl mx-auto">
             {transactionsError ? (
-              <div className="mb-4 rounded-lg border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+              <div className="mb-4 rounded-lg border border-yellow-400/30 bg-yellow-400/10 px-4 py-3 text-sm text-yellow-100">
                 {transactionsError}
               </div>
             ) : null}

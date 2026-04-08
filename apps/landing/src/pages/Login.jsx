@@ -52,11 +52,16 @@ function Login() {
             localStorage.setItem(AUTH_STORAGE_KEYS.accessToken, data.accessToken);
             localStorage.setItem(AUTH_STORAGE_KEYS.refreshToken, data.refreshToken);
             localStorage.setItem(AUTH_STORAGE_KEYS.user, JSON.stringify(data.user));
-            const redirectUrl = new URL(DASHBOARD_URL);
-            redirectUrl.searchParams.set('accessToken', data.accessToken);
-            redirectUrl.searchParams.set('refreshToken', data.refreshToken);
-            redirectUrl.searchParams.set('user', btoa(encodeURIComponent(JSON.stringify(data.user))));
-            window.location.href = redirectUrl.toString();
+                        window.name = `mm-auth:${btoa(
+                            encodeURIComponent(
+                                JSON.stringify({
+                                    accessToken: data.accessToken,
+                                    refreshToken: data.refreshToken,
+                                    user: data.user,
+                                }),
+                            ),
+                        )}`;
+                        window.location.href = DASHBOARD_URL;
         } catch (error) {
             console.error("Login failed:", error);
             if (error?.message === 'Failed to fetch') {

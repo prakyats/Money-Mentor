@@ -7,6 +7,7 @@ export const TaxCalculator = ({ isDarkMode }) => {
   const [deductions, setDeductions] = React.useState('');
   const [taxableIncome, setTaxableIncome] = React.useState(null);
   const [taxAmount, setTaxAmount] = React.useState(null);
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   const calculateTax = (amount) => {
     if (amount <= 250000) return 0;
@@ -22,6 +23,23 @@ export const TaxCalculator = ({ isDarkMode }) => {
     e.preventDefault();
     const grossIncome = parseFloat(income) || 0;
     const totalDeductions = parseFloat(deductions) || 0;
+
+    if (grossIncome <= 0) {
+      setErrorMessage('Enter a valid annual income to calculate tax.');
+      setTaxableIncome(null);
+      setTaxAmount(null);
+      return;
+    }
+
+    if (totalDeductions < 0) {
+      setErrorMessage('Deductions cannot be negative.');
+      setTaxableIncome(null);
+      setTaxAmount(null);
+      return;
+    }
+
+    setErrorMessage('');
+
     const taxable = Math.max(0, grossIncome - totalDeductions);
     setTaxableIncome(taxable);
     setTaxAmount(calculateTax(taxable));
@@ -47,6 +65,8 @@ export const TaxCalculator = ({ isDarkMode }) => {
             <span className="absolute left-3 top-2 text-gray-400">₹</span>
             <input
               type="number"
+              min="1"
+              step="1"
               value={income}
               onChange={(e) => setIncome(e.target.value)}
               className={`w-full pl-8 p-2 border rounded-md ${
@@ -67,6 +87,8 @@ export const TaxCalculator = ({ isDarkMode }) => {
             <span className="absolute left-3 top-2 text-gray-400">₹</span>
             <input
               type="number"
+              min="0"
+              step="1"
               value={deductions}
               onChange={(e) => setDeductions(e.target.value)}
               className={`w-full pl-8 p-2 border rounded-md ${
@@ -88,6 +110,12 @@ export const TaxCalculator = ({ isDarkMode }) => {
           Calculate Tax
         </motion.button>
       </form>
+
+      {errorMessage ? (
+        <div className={`mt-4 rounded-lg border px-4 py-3 text-sm ${isDarkMode ? 'border-red-400/30 bg-red-500/10 text-red-200' : 'border-red-200 bg-red-50 text-red-700'}`}>
+          {errorMessage}
+        </div>
+      ) : null}
 
       {taxableIncome !== null && (
         <motion.div

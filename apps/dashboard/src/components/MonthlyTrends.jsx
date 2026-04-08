@@ -43,6 +43,8 @@ export const MonthlyTrends = ({ expenses, isDarkMode }) => {
     });
   }, [expenses]);
 
+  const hasData = monthlyData.length > 0;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -54,9 +56,15 @@ export const MonthlyTrends = ({ expenses, isDarkMode }) => {
         Monthly Expense Trends
       </h2>
 
-      <div className="h-72">
+      {!hasData ? (
+        <div className={`rounded-2xl border p-6 ${isDarkMode ? 'border-dark-200 bg-dark-200/60 text-gray-300' : 'border-gray-200 bg-gray-50 text-gray-600'}`}>
+          <p className="font-medium text-gray-900 dark:text-white">No monthly trend data yet</p>
+          <p className="mt-1 text-sm">Track a few expenses to reveal your spending pattern over time.</p>
+        </div>
+      ) : (
+      <div className="h-80" role="img" aria-label="Monthly expenses bar chart with labels and trend lines">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={monthlyData} margin={{ top: 10, right: 30, left: 20, bottom: 40 }}>
+          <BarChart data={monthlyData} margin={{ top: 10, right: 30, left: 12, bottom: 72 }}>
             <CartesianGrid 
               strokeDasharray="3 3" 
               stroke={isDarkMode ? '#2a2a2a' : '#e5e7eb'} 
@@ -69,11 +77,15 @@ export const MonthlyTrends = ({ expenses, isDarkMode }) => {
               angle={-45}
               textAnchor="end"
               height={60}
+              interval={0}
+              tickMargin={10}
+              label={{ value: 'Month', position: 'insideBottom', offset: -8, fill: isDarkMode ? '#fff' : '#374151' }}
             />
             <YAxis 
               stroke={isDarkMode ? '#ffffff' : '#374151'}
               tick={{ fill: isDarkMode ? '#ffffff' : '#374151', fontSize: 12 }}
               tickFormatter={(value) => `₹${value}`}
+              label={{ value: 'Expense (₹)', angle: -90, position: 'insideLeft', fill: isDarkMode ? '#fff' : '#374151' }}
             />
             <Tooltip
               contentStyle={{ 
@@ -94,6 +106,7 @@ export const MonthlyTrends = ({ expenses, isDarkMode }) => {
               dataKey="expenses" 
               name="Monthly Expenses"
               radius={[4, 4, 0, 0]}
+              minPointSize={4}
             >
               {monthlyData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -102,6 +115,7 @@ export const MonthlyTrends = ({ expenses, isDarkMode }) => {
           </BarChart>
         </ResponsiveContainer>
       </div>
+      )}
     </motion.div>
   );
 };

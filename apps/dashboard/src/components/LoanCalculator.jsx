@@ -12,11 +12,22 @@ export const LoanCalculator = ({ isDarkMode }) => {
   const [emi, setEMI] = React.useState(null);
   const [totalPayment, setTotalPayment] = React.useState(null);
   const [totalInterest, setTotalInterest] = React.useState(null);
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   const calculateEMI = () => {
     const P = parseFloat(formData.principal);
     const R = parseFloat(formData.rate) / 12 / 100;
     const N = parseFloat(formData.tenure) * 12;
+
+    if (!P || !R || !N || P <= 0 || R <= 0 || N <= 0) {
+      setErrorMessage('Enter a positive loan amount, interest rate, and tenure.');
+      setEMI(null);
+      setTotalPayment(null);
+      setTotalInterest(null);
+      return;
+    }
+
+    setErrorMessage('');
 
     const emi = P * R * Math.pow(1 + R, N) / (Math.pow(1 + R, N) - 1);
     const total = emi * N;
@@ -51,6 +62,8 @@ export const LoanCalculator = ({ isDarkMode }) => {
             <span className="absolute left-3 top-2 text-gray-400">₹</span>
             <input
               type="number"
+              min="1"
+              step="0.01"
               value={formData.principal}
               onChange={(e) => setFormData({ ...formData, principal: e.target.value })}
               className={`w-full pl-8 p-2 border rounded-md ${
@@ -69,6 +82,7 @@ export const LoanCalculator = ({ isDarkMode }) => {
           </label>
           <input
             type="number"
+            min="0.1"
             step="0.1"
             value={formData.rate}
             onChange={(e) => setFormData({ ...formData, rate: e.target.value })}
@@ -87,6 +101,7 @@ export const LoanCalculator = ({ isDarkMode }) => {
           </label>
           <input
             type="number"
+            min="0.1"
             step="0.1"
             value={formData.tenure}
             onChange={(e) => setFormData({ ...formData, tenure: e.target.value })}
@@ -108,6 +123,12 @@ export const LoanCalculator = ({ isDarkMode }) => {
           Calculate EMI
         </motion.button>
       </form>
+
+      {errorMessage ? (
+        <div className={`mt-4 rounded-lg border px-4 py-3 text-sm ${isDarkMode ? 'border-red-400/30 bg-red-500/10 text-red-200' : 'border-red-200 bg-red-50 text-red-700'}`}>
+          {errorMessage}
+        </div>
+      ) : null}
 
       {emi !== null && (
         <motion.div

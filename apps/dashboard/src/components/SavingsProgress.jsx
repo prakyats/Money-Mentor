@@ -30,6 +30,33 @@ export const SavingsProgress = ({ profile, expenses, isDarkMode }) => {
     { name: 'Savings', value: currentSavings },
   ];
 
+  const renderPieLabel = ({ cx, cy, midAngle, outerRadius, percent, name, viewBox }) => {
+    const RADIAN = Math.PI / 180;
+    const labelRadius = outerRadius + 18;
+    const rawX = cx + labelRadius * Math.cos(-midAngle * RADIAN);
+    const rawY = cy + labelRadius * Math.sin(-midAngle * RADIAN);
+    const padding = 14;
+    const width = viewBox?.width ?? cx * 2;
+    const height = viewBox?.height ?? cy * 2;
+    const x = Math.min(width - padding, Math.max(padding, rawX));
+    const y = Math.min(height - padding, Math.max(padding, rawY));
+    const textAnchor = x >= cx ? 'start' : 'end';
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill={isDarkMode ? '#f3f4f6' : '#111827'}
+        textAnchor={textAnchor}
+        dominantBaseline="central"
+        fontSize="12"
+        fontWeight="600"
+      >
+        {`${name} (${(percent * 100).toFixed(0)}%)`}
+      </text>
+    );
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -41,16 +68,16 @@ export const SavingsProgress = ({ profile, expenses, isDarkMode }) => {
         Savings Distribution
       </h2>
 
-      <div className="h-64">
+      <div className="h-72 sm:h-80">
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+          <PieChart margin={{ top: 16, right: 28, bottom: 16, left: 28 }}>
             <Pie
               data={data}
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-              outerRadius={80}
+              label={renderPieLabel}
+              outerRadius={88}
               fill="#8884d8"
               dataKey="value"
             >

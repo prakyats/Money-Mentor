@@ -39,7 +39,7 @@ export const ExpenseTracker = ({ expenses, onAddExpense, isDarkMode }) => {
       </h2>
       
       <form onSubmit={handleSubmit} className="mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
           <div>
             <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
               Category
@@ -53,6 +53,7 @@ export const ExpenseTracker = ({ expenses, onAddExpense, isDarkMode }) => {
                   : 'bg-white border-gray-300 text-gray-900 focus:border-yellow-500'
               } focus:ring focus:ring-yellow-400/20`}
               required
+                aria-label="Expense category"
             >
               <option value="">Select Category</option>
               <option value="Food">Food</option>
@@ -71,6 +72,8 @@ export const ExpenseTracker = ({ expenses, onAddExpense, isDarkMode }) => {
               <span className="absolute left-3 top-2 text-gray-400">₹</span>
               <input
                 type="number"
+                min="0.01"
+                step="0.01"
                 value={formData.amount}
                 onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                 className={`w-full pl-8 p-2 border rounded-md ${
@@ -79,6 +82,7 @@ export const ExpenseTracker = ({ expenses, onAddExpense, isDarkMode }) => {
                     : 'bg-white border-gray-300 text-gray-900 focus:border-yellow-500'
                 } focus:ring focus:ring-yellow-400/20`}
                 required
+                aria-label="Expense amount"
               />
             </div>
           </div>
@@ -96,6 +100,7 @@ export const ExpenseTracker = ({ expenses, onAddExpense, isDarkMode }) => {
                   : 'bg-white border-gray-300 text-gray-900 focus:border-yellow-500'
               } focus:ring focus:ring-yellow-400/20`}
               required
+                aria-label="Expense date"
             />
           </div>
           <div>
@@ -112,6 +117,7 @@ export const ExpenseTracker = ({ expenses, onAddExpense, isDarkMode }) => {
                   : 'bg-white border-gray-300 text-gray-900 focus:border-yellow-500'
               } focus:ring focus:ring-yellow-400/20`}
               required
+                aria-label="Expense description"
             />
           </div>
         </div>
@@ -137,16 +143,24 @@ export const ExpenseTracker = ({ expenses, onAddExpense, isDarkMode }) => {
             </tr>
           </thead>
           <tbody>
-            {expenses.map((expense) => (
-              <tr key={expense.id} className={`border-b ${isDarkMode ? 'border-dark-300' : 'border-gray-200'}`}>
-                <td className={`py-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  {format(new Date(expense.date), 'MMM dd, yyyy')}
+            {expenses.length === 0 ? (
+              <tr>
+                <td colSpan="4" className={`py-8 text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                  No expenses yet. Add your first expense to see it here.
                 </td>
-                <td className={`py-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{expense.category}</td>
-                <td className={`py-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{expense.description}</td>
-                <td className={`py-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>₹{expense.amount.toFixed(2)}</td>
               </tr>
-            ))}
+            ) : (
+              expenses.map((expense) => (
+                <tr key={expense.id} className={`border-b ${isDarkMode ? 'border-dark-300' : 'border-gray-200'}`}>
+                  <td className={`py-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    {format(new Date(expense.date), 'MMM dd, yyyy')}
+                  </td>
+                  <td className={`py-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{expense.category}</td>
+                  <td className={`py-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{expense.description}</td>
+                  <td className={`py-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>₹{expense.amount.toFixed(2)}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

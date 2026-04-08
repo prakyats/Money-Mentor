@@ -36,6 +36,8 @@ export const ExpenseInsights = ({ expenses, isDarkMode }) => {
     return Object.entries(monthly).map(([month, amount]) => ({ month, amount }));
   }, [expenses]);
 
+  const hasData = categoryData.length > 0;
+
   const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }) => {
     const RADIAN = Math.PI / 180;
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
@@ -67,8 +69,14 @@ export const ExpenseInsights = ({ expenses, isDarkMode }) => {
         Expense Insights
       </h2>
 
+      {!hasData ? (
+        <div className={`rounded-2xl border p-6 ${isDarkMode ? 'border-dark-200 bg-dark-200/60 text-gray-300' : 'border-gray-200 bg-gray-50 text-gray-600'}`}>
+          <p className="font-medium text-gray-900 dark:text-white">No expense data yet</p>
+          <p className="mt-1 text-sm">Add a few expenses to see category and monthly charts here.</p>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-        <div className="h-[300px]">
+        <figure className="h-[320px]" role="img" aria-label="Expense breakdown by category pie chart">
           <h3 className={`text-base sm:text-lg font-semibold mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             Expenses by Category
           </h3>
@@ -109,21 +117,22 @@ export const ExpenseInsights = ({ expenses, isDarkMode }) => {
                   color: isDarkMode ? '#ffffff' : '#374151'
                 }}
                 formatter={(value) => (
-                  <span className={`text-xs ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  <span className={`text-xs break-words ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     {value}
                   </span>
                 )}
               />
             </PieChart>
           </ResponsiveContainer>
-        </div>
+        </figure>
 
-        <div className="h-[300px]">
+        <figure className="h-[320px]" role="img" aria-label="Monthly expense bar chart">
           <h3 className={`text-base sm:text-lg font-semibold mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             Monthly Expenses
           </h3>
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={monthlyData} margin={{ top: 20, right: 30, left: 20, bottom: 65 }}>
+            <BarChart data={monthlyData} margin={{ top: 20, right: 30, left: 12, bottom: 72 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke={isDarkMode ? '#2a2a2a' : '#e5e7eb'} vertical={false} />
               <XAxis 
                 dataKey="month" 
                 stroke={isDarkMode ? '#ffffff' : '#374151'}
@@ -131,10 +140,14 @@ export const ExpenseInsights = ({ expenses, isDarkMode }) => {
                 angle={-45}
                 textAnchor="end"
                 height={60}
+                interval={0}
+                tickMargin={12}
+                label={{ value: 'Month', position: 'insideBottom', offset: -8, fill: isDarkMode ? '#fff' : '#374151' }}
               />
               <YAxis 
                 stroke={isDarkMode ? '#ffffff' : '#374151'}
                 tick={{ fill: isDarkMode ? '#ffffff' : '#374151' }}
+                label={{ value: 'Expense (₹)', angle: -90, position: 'insideLeft', fill: isDarkMode ? '#fff' : '#374151' }}
               />
               <Tooltip
                 contentStyle={{ 
@@ -169,8 +182,9 @@ export const ExpenseInsights = ({ expenses, isDarkMode }) => {
               </Bar>
             </BarChart>
           </ResponsiveContainer>
-        </div>
+        </figure>
       </div>
+      )}
     </motion.div>
   );
 };

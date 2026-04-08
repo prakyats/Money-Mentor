@@ -16,7 +16,7 @@ export const BudgetCalculator = ({ profile, expenses, isDarkMode }) => {
     })
     .reduce((sum, expense) => sum + expense.amount, 0);
 
-  const percentageUsed = (currentMonthExpenses / monthlyBudget) * 100;
+  const percentageUsed = monthlyBudget > 0 ? (currentMonthExpenses / monthlyBudget) * 100 : 0;
   
   const getProgressColor = () => {
     if (percentageUsed >= 90) return 'bg-red-500';
@@ -77,6 +77,11 @@ export const BudgetCalculator = ({ profile, expenses, isDarkMode }) => {
                 className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${getProgressColor()}`}
               />
             </div>
+            {monthlyBudget <= 0 ? (
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                Set a financial profile with annual income and savings goal to calculate your budget.
+              </p>
+            ) : null}
           </div>
 
           {percentageUsed >= 90 && (

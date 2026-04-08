@@ -31,6 +31,35 @@ export const CategoryBudget = ({ expenses, isDarkMode }) => {
     }));
   }, [expenses]);
 
+  const hasData = categoryData.length > 0;
+
+  const renderPieLabel = ({ cx, cy, midAngle, outerRadius, percentage, name, viewBox }) => {
+    const RADIAN = Math.PI / 180;
+    const labelRadius = outerRadius + 18;
+    const rawX = cx + labelRadius * Math.cos(-midAngle * RADIAN);
+    const rawY = cy + labelRadius * Math.sin(-midAngle * RADIAN);
+    const padding = 14;
+    const width = viewBox?.width ?? cx * 2;
+    const height = viewBox?.height ?? cy * 2;
+    const x = Math.min(width - padding, Math.max(padding, rawX));
+    const y = Math.min(height - padding, Math.max(padding, rawY));
+    const textAnchor = x >= cx ? 'start' : 'end';
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill={isDarkMode ? '#f3f4f6' : '#111827'}
+        textAnchor={textAnchor}
+        dominantBaseline="central"
+        fontSize="12"
+        fontWeight="600"
+      >
+        {`${name} (${percentage}%)`}
+      </text>
+    );
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -42,17 +71,23 @@ export const CategoryBudget = ({ expenses, isDarkMode }) => {
         Category-wise Budget
       </h2>
 
+      {!hasData ? (
+        <div className={`rounded-2xl border p-6 ${isDarkMode ? 'border-dark-200 bg-dark-200/60 text-gray-300' : 'border-gray-200 bg-gray-50 text-gray-600'}`}>
+          <p className="font-medium text-gray-900 dark:text-white">No category data yet</p>
+          <p className="mt-1 text-sm">Once you add expenses, this chart will show how your spending is distributed by category.</p>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="h-80">
+        <div className="h-80" role="img" aria-label="Category budget pie chart">
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
+            <PieChart margin={{ top: 16, right: 28, bottom: 16, left: 28 }}>
               <Pie
                 data={categoryData}
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, percentage }) => `${name} (${percentage}%)`}
-                outerRadius="80%"
+                label={renderPieLabel}
+                outerRadius={88}
                 fill="#8884d8"
                 dataKey="value"
               >
@@ -72,7 +107,7 @@ export const CategoryBudget = ({ expenses, isDarkMode }) => {
               />
               <Legend 
                 wrapperStyle={{ color: isDarkMode ? '#ffffff' : '#374151' }}
-                formatter={(value) => <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>{value}</span>}
+                formatter={(value) => <span className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'} text-xs break-words`}>{value}</span>}
               />
             </PieChart>
           </ResponsiveContainer>
@@ -107,6 +142,7 @@ export const CategoryBudget = ({ expenses, isDarkMode }) => {
           </div>
         </div>
       </div>
+      )}
     </motion.div>
   );
 };
