@@ -9,6 +9,14 @@ import { InvestmentPage } from './pages/InvestmentPage';
 import { CalculatorPage } from './pages/CalculatorPage';
 import { API_BASE_URL, API_PATHS, AUTH_STORAGE_KEYS, LANDING_LOGIN_URL } from './config/api';
 
+const DEFAULT_PROFILE = {
+  annualIncome: 0,
+  savingsGoal: 20,
+  age: 25,
+};
+
+const PROFILE_STORAGE_PREFIX = 'mm_profile_';
+
 const parseExpenseNote = (note) => {
   if (!note) {
     return { category: 'Other', description: '' };
@@ -41,13 +49,29 @@ function App() {
   const [isDarkMode, setIsDarkMode] = React.useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const [authChecked, setAuthChecked] = React.useState(false);
-  const [profile, setProfile] = React.useState({
-    annualIncome: 0,
-    savingsGoal: 20,
-    age: 25,
-  });
+  const [profile, setProfile] = React.useState(DEFAULT_PROFILE);
   const [expenses, setExpenses] = React.useState([]);
   const [transactionsError, setTransactionsError] = React.useState('');
+
+  const getProfileStorageKey = React.useCallback(() => {
+    try {
+      const storedUser = localStorage.getItem(AUTH_STORAGE_KEYS.user);
+      if (!storedUser) {
+        return null;
+      }
+
+      const user = JSON.parse(storedUser);
+      const userId = user?.id || user?.userId || user?.email;
+
+      if (!userId) {
+        return null;
+      }
+
+      return `${PROFILE_STORAGE_PREFIX}${userId}`;
+    } catch {
+      return null;
+    }
+  }, []);
 
   const clearSession = React.useCallback(() => {
     localStorage.removeItem(AUTH_STORAGE_KEYS.accessToken);
@@ -159,6 +183,22 @@ function App() {
         );
 
         localStorage.setItem(AUTH_STORAGE_KEYS.user, JSON.stringify(response.data));
+
+        const profileStorageKey = getProfileStorageKey();
+        if (profileStorageKey) {
+          const savedProfile = localStorage.getItem(profileStorageKey);
+          if (savedProfile) {
+            try {
+              const parsedProfile = JSON.parse(savedProfile);
+              setProfile({ ...DEFAULT_PROFILE, ...parsedProfile });
+            } catch {
+              setProfile(DEFAULT_PROFILE);
+            }
+          } else {
+            setProfile(DEFAULT_PROFILE);
+          }
+        }
+
         await fetchTransactions();
         setTransactionsError('');
         setAuthChecked(true);
@@ -169,7 +209,20 @@ function App() {
     };
 
     bootstrapSession();
-  }, [clearSession, fetchTransactions, requestWithAutoRefresh]);
+  }, [clearSession, fetchTransactions, getProfileStorageKey, requestWithAutoRefresh]);
+
+  React.useEffect(() => {
+    if (!authChecked) {
+      return;
+    }
+
+    const profileStorageKey = getProfileStorageKey();
+    if (!profileStorageKey) {
+      return;
+    }
+
+    localStorage.setItem(profileStorageKey, JSON.stringify(profile));
+  }, [authChecked, getProfileStorageKey, profile]);
 
   const handleAddExpense = async (newExpense) => {
     const accessToken = localStorage.getItem(AUTH_STORAGE_KEYS.accessToken);
