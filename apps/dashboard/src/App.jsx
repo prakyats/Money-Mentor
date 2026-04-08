@@ -55,6 +55,32 @@ function App() {
   const [expenses, setExpenses] = React.useState([]);
   const [transactionsError, setTransactionsError] = React.useState('');
 
+  const isLandingLoginSameOrigin = React.useMemo(() => {
+    try {
+      return new URL(LANDING_LOGIN_URL, window.location.origin).origin === window.location.origin;
+    } catch {
+      return false;
+    }
+  }, []);
+
+  const enablePreviewMode = React.useCallback((message) => {
+    setTransactionsError(message);
+    setCurrentUser({ fullName: 'Preview User', email: 'local.preview@moneymentor.dev' });
+    setAuthChecked(true);
+  }, []);
+
+  const goToLandingLogin = React.useCallback(
+    (fallbackMessage) => {
+      if (isDevelopmentPreview || isLandingLoginSameOrigin) {
+        enablePreviewMode(fallbackMessage);
+        return;
+      }
+
+      window.location.href = LANDING_LOGIN_URL;
+    },
+    [enablePreviewMode, isDevelopmentPreview, isLandingLoginSameOrigin],
+  );
+
   const getProfileStorageKey = React.useCallback(() => {
     try {
       const storedUser = localStorage.getItem(AUTH_STORAGE_KEYS.user);
@@ -179,13 +205,7 @@ function App() {
       const accessToken = localStorage.getItem(AUTH_STORAGE_KEYS.accessToken);
 
       if (!accessToken) {
-        if (isDevelopmentPreview) {
-          setTransactionsError('Local preview mode: sign in from landing to load live account data.');
-          setCurrentUser({ fullName: 'Preview User', email: 'local.preview@moneymentor.dev' });
-          setAuthChecked(true);
-          return;
-        }
-        window.location.href = LANDING_LOGIN_URL;
+        goToLandingLogin('Local preview mode: sign in from landing to load live account data.');
         return;
       }
 
@@ -220,19 +240,13 @@ function App() {
         setTransactionsError('');
         setAuthChecked(true);
       } catch {
-        if (isDevelopmentPreview) {
-          setTransactionsError('Local preview mode: could not load live session data.');
-          setCurrentUser({ fullName: 'Preview User', email: 'local.preview@moneymentor.dev' });
-          setAuthChecked(true);
-          return;
-        }
         clearSession();
-        window.location.href = LANDING_LOGIN_URL;
+        goToLandingLogin('Local preview mode: could not load live session data.');
       }
     };
 
     bootstrapSession();
-  }, [clearSession, fetchTransactions, getProfileStorageKey, isDevelopmentPreview, requestWithAutoRefresh]);
+  }, [clearSession, fetchTransactions, getProfileStorageKey, goToLandingLogin, requestWithAutoRefresh]);
 
   React.useEffect(() => {
     if (!authChecked) {
@@ -250,7 +264,7 @@ function App() {
   const handleAddExpense = async (newExpense) => {
     const accessToken = localStorage.getItem(AUTH_STORAGE_KEYS.accessToken);
     if (!accessToken) {
-      window.location.href = LANDING_LOGIN_URL;
+      goToLandingLogin('Session missing: sign in from landing to keep account data in sync.');
       return;
     }
 
@@ -274,7 +288,7 @@ function App() {
       setTransactionsError('');
     } catch (error) {
       if (error?.message === 'SESSION_EXPIRED') {
-        window.location.href = LANDING_LOGIN_URL;
+        goToLandingLogin('Session expired: sign in again to continue with live account data.');
         return;
       }
       setTransactionsError('Could not save expense. Please try again.');
@@ -286,7 +300,9 @@ function App() {
   if (!shouldRenderDashboard) {
     return (
       <div className="mm-dashboard flex min-h-screen items-center justify-center">
-        <p className="text-sm text-gray-300">Checking your session...</p>
+        <div className="rounded-2xl border border-yellow-400/20 bg-dark-100/90 px-5 py-4 text-center shadow-lg">
+          <p className="text-sm font-semibold text-yellow-200">Checking your session...</p>
+        </div>
       </div>
     );
   }

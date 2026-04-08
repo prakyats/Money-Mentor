@@ -77,7 +77,6 @@ export const ProfileSetup = ({ profile, onSave, isDarkMode }) => {
             } focus:ring focus:ring-yellow-400/20`}
             placeholder="Enter your age"
             required
-            min="18"
             max="100"
           />
         </div>
