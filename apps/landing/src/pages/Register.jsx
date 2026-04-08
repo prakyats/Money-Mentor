@@ -1,7 +1,6 @@
 import { useRef } from 'react';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import axios from "axios";
 import { API_BASE_URL, AUTH_STORAGE_KEYS, DASHBOARD_URL } from '../config/api';
 
 function Register() {
@@ -15,6 +14,7 @@ function Register() {
     const signup = async (e) => {
         e.preventDefault();
         setErrorMessage('');
+        console.log('REGISTER CLICKED');
 
         const fullName = usernameRef.current?.value.trim();
         const email = mailRef.current?.value.trim().toLowerCase();
@@ -38,23 +38,48 @@ function Register() {
 
         try {
             setLoading(true);
-            const response = await axios.post(
-                `${API_BASE_URL}/api/v1/auth/register`,
-                { fullName, email, password },
-                {
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                }
-            );
+            const registerUrl = `${API_BASE_URL}/auth/register`;
+            console.log('REGISTER REQUEST URL:', registerUrl);
 
-            localStorage.setItem(AUTH_STORAGE_KEYS.accessToken, response.data.accessToken);
-            localStorage.setItem(AUTH_STORAGE_KEYS.refreshToken, response.data.refreshToken);
-            localStorage.setItem(AUTH_STORAGE_KEYS.user, JSON.stringify(response.data.user));
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+            const response = await fetch(registerUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ fullName, email, password }),
+                signal: controller.signal,
+            });
+
+            clearTimeout(timeoutId);
+
+            const contentType = response.headers.get('content-type') || '';
+            const data = contentType.includes('application/json')
+                ? await response.json()
+                : { message: await response.text() };
+
+            if (!response.ok) {
+                console.error('Register failed:', data);
+                throw new Error(data?.message || 'Register failed');
+            }
+
+            localStorage.setItem(AUTH_STORAGE_KEYS.accessToken, data.accessToken);
+            localStorage.setItem(AUTH_STORAGE_KEYS.refreshToken, data.refreshToken);
+            localStorage.setItem(AUTH_STORAGE_KEYS.user, JSON.stringify(data.user));
             window.location.href = DASHBOARD_URL;
         } catch (error) {
             console.error("Signup error:", error);
-            setErrorMessage("Failed to sign up. Please try again.");
+            if (error?.name === 'AbortError') {
+                setErrorMessage('Request timed out. Please check your network/CORS and try again.');
+                return;
+            }
+            if (error?.message === 'Failed to fetch') {
+                setErrorMessage(`Network/CORS blocked. Add this origin in backend CORS_ORIGIN: ${window.location.origin}`);
+                return;
+            }
+            setErrorMessage(error?.message || 'Failed to sign up. Please try again.');
         } finally {
             setLoading(false);
         }

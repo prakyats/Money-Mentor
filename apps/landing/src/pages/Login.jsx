@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from "axios";
 import { API_BASE_URL, AUTH_STORAGE_KEYS, DASHBOARD_URL } from '../config/api';
 
 function Login() {
@@ -29,18 +28,38 @@ function Login() {
 
         try {
             setLoading(true);
-            const response = await axios.post(`${API_BASE_URL}/api/v1/auth/login`, {
-                email,
-                password,
+            const loginUrl = `${API_BASE_URL}/auth/login`;
+            console.log('LOGIN REQUEST URL:', loginUrl);
+
+            const response = await fetch(loginUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
             });
 
-            localStorage.setItem(AUTH_STORAGE_KEYS.accessToken, response.data.accessToken);
-            localStorage.setItem(AUTH_STORAGE_KEYS.refreshToken, response.data.refreshToken);
-            localStorage.setItem(AUTH_STORAGE_KEYS.user, JSON.stringify(response.data.user));
+            const contentType = response.headers.get('content-type') || '';
+            const data = contentType.includes('application/json')
+                ? await response.json()
+                : { message: await response.text() };
+
+            if (!response.ok) {
+                console.error('Login failed:', data);
+                throw new Error(data?.message || 'Invalid email or password. Please try again.');
+            }
+
+            localStorage.setItem(AUTH_STORAGE_KEYS.accessToken, data.accessToken);
+            localStorage.setItem(AUTH_STORAGE_KEYS.refreshToken, data.refreshToken);
+            localStorage.setItem(AUTH_STORAGE_KEYS.user, JSON.stringify(data.user));
             window.location.href = DASHBOARD_URL;
         } catch (error) {
             console.error("Login failed:", error);
-            setErrorMessage("Invalid email or password. Please try again.");
+            if (error?.message === 'Failed to fetch') {
+                setErrorMessage(`Network/CORS blocked. Add this origin in backend CORS_ORIGIN: ${window.location.origin}`);
+                return;
+            }
+            setErrorMessage(error?.message || 'Invalid email or password. Please try again.');
         } finally {
             setLoading(false);
         }
