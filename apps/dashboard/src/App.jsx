@@ -120,6 +120,28 @@ function App() {
 
   React.useEffect(() => {
     const bootstrapSession = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const accessTokenFromUrl = params.get('accessToken');
+      const refreshTokenFromUrl = params.get('refreshToken');
+      const userFromUrl = params.get('user');
+
+      if (accessTokenFromUrl && refreshTokenFromUrl) {
+        localStorage.setItem(AUTH_STORAGE_KEYS.accessToken, accessTokenFromUrl);
+        localStorage.setItem(AUTH_STORAGE_KEYS.refreshToken, refreshTokenFromUrl);
+
+        if (userFromUrl) {
+          try {
+            const decodedUser = JSON.parse(decodeURIComponent(atob(userFromUrl)));
+            localStorage.setItem(AUTH_STORAGE_KEYS.user, JSON.stringify(decodedUser));
+          } catch {
+            // Ignore malformed user payload and continue with token-based bootstrap.
+          }
+        }
+
+        const cleanPath = `${window.location.origin}${window.location.pathname}${window.location.hash}`;
+        window.history.replaceState({}, document.title, cleanPath);
+      }
+
       const accessToken = localStorage.getItem(AUTH_STORAGE_KEYS.accessToken);
 
       if (!accessToken) {

@@ -68,7 +68,11 @@ function Register() {
             localStorage.setItem(AUTH_STORAGE_KEYS.accessToken, data.accessToken);
             localStorage.setItem(AUTH_STORAGE_KEYS.refreshToken, data.refreshToken);
             localStorage.setItem(AUTH_STORAGE_KEYS.user, JSON.stringify(data.user));
-            window.location.href = DASHBOARD_URL;
+            const redirectUrl = new URL(DASHBOARD_URL);
+            redirectUrl.searchParams.set('accessToken', data.accessToken);
+            redirectUrl.searchParams.set('refreshToken', data.refreshToken);
+            redirectUrl.searchParams.set('user', btoa(encodeURIComponent(JSON.stringify(data.user))));
+            window.location.href = redirectUrl.toString();
         } catch (error) {
             console.error("Signup error:", error);
             if (error?.name === 'AbortError') {
