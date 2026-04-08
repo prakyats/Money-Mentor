@@ -35,13 +35,17 @@ const parseExpenseNote = (note) => {
 
 const mapTransactionToExpense = (transaction) => {
   const parsed = parseExpenseNote(transaction.note);
+  const numericAmount = Number(transaction.amount);
+  const rawDate = transaction.happenedAt || transaction.createdAt || transaction.date;
+  const parsedDate = new Date(rawDate);
+  const safeDate = Number.isNaN(parsedDate.getTime()) ? new Date().toISOString() : parsedDate.toISOString();
 
   return {
-    id: transaction.id,
-    amount: Number(transaction.amount),
-    date: transaction.happenedAt,
+    id: transaction.id ?? `${safeDate}-${Math.random().toString(36).slice(2, 8)}`,
+    amount: Number.isFinite(numericAmount) ? numericAmount : 0,
+    date: safeDate,
     category: transaction.category?.name || parsed.category,
-    description: parsed.description,
+    description: parsed.description || '',
   };
 };
 
@@ -169,7 +173,8 @@ function App() {
       }),
     );
 
-    const mapped = response.data.map(mapTransactionToExpense);
+    const list = Array.isArray(response.data) ? response.data : [];
+    const mapped = list.map(mapTransactionToExpense);
     setExpenses(mapped);
   }, [requestWithAutoRefresh]);
 

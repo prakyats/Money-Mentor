@@ -27,6 +27,19 @@ export const ExpenseTracker = ({ expenses, onAddExpense, isDarkMode }) => {
     });
   };
 
+  const formatExpenseDate = (value) => {
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) {
+      return 'Invalid date';
+    }
+
+    try {
+      return format(parsed, 'MMM dd, yyyy');
+    } catch {
+      return 'Invalid date';
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -153,7 +166,7 @@ export const ExpenseTracker = ({ expenses, onAddExpense, isDarkMode }) => {
               expenses.map((expense) => (
                 <tr key={expense.id} className={`border-b ${isDarkMode ? 'border-dark-300' : 'border-gray-200'}`}>
                   <td className={`py-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    {format(new Date(expense.date), 'MMM dd, yyyy')}
+                    {formatExpenseDate(expense.date)}
                   </td>
                   <td className={`py-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{expense.category}</td>
                   <td className={`py-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{expense.description}</td>
