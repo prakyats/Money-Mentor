@@ -1,4 +1,3 @@
 {
-  "buildCommand": "npm run build:all",
-  "outputDirectory": "."
+  "buildCommand": "npm run build"
 }
