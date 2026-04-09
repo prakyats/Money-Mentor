@@ -14,11 +14,18 @@ import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
+  private readonly bcryptRounds: number;
+
   constructor(
     private readonly authRepo: AuthRepository,
     private readonly jwtService: JwtService,
     private readonly config: ConfigService,
-  ) {}
+  ) {
+    const configuredRounds = Number(this.config.get<string>('BCRYPT_ROUNDS', '10'));
+    this.bcryptRounds = Number.isFinite(configuredRounds)
+      ? Math.min(14, Math.max(8, Math.trunc(configuredRounds)))
+      : 10;
+  }
 
   async register(dto: RegisterDto) {
     const existing = await this.authRepo.findUserByEmail(dto.email);
@@ -27,7 +34,7 @@ export class AuthService {
       throw new ConflictException('Email is already registered');
     }
 
-    const passwordHash = await bcrypt.hash(dto.password, 12);
+    const passwordHash = await bcrypt.hash(dto.password, this.bcryptRounds);
     const user = await this.authRepo.createUser({
       email: dto.email,
       fullName: dto.fullName,
@@ -115,7 +122,7 @@ export class AuthService {
   }
 
   private async storeRefreshToken(userId: string, refreshToken: string) {
-    const refreshTokenHash = await bcrypt.hash(refreshToken, 12);
+    const refreshTokenHash = await bcrypt.hash(refreshToken, this.bcryptRounds);
     await this.authRepo.updateRefreshTokenHash(userId, refreshTokenHash);
   }
 }

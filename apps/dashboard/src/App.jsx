@@ -7,6 +7,7 @@ import { ExpensePage } from './pages/ExpensePage';
 import { BudgetPage } from './pages/BudgetPage';
 import { InvestmentPage } from './pages/InvestmentPage';
 import { CalculatorPage } from './pages/CalculatorPage';
+import { ChatbotOverlay } from './components/ChatbotOverlay';
 import { API_BASE_URL, API_PATHS, AUTH_STORAGE_KEYS, LANDING_LOGIN_URL } from './config/api';
 
 const DEFAULT_PROFILE = {
@@ -241,9 +242,12 @@ function App() {
           }
         }
 
-        await fetchTransactions();
         setTransactionsError('');
         setAuthChecked(true);
+
+        void fetchTransactions().catch(() => {
+          setTransactionsError('Could not load transactions yet. Retry by refreshing in a moment.');
+        });
       } catch {
         clearSession();
         goToLandingLogin('Local preview mode: could not load live session data.');
@@ -386,6 +390,7 @@ function App() {
             </Routes>
           </div>
         </main>
+        <ChatbotOverlay isDarkMode={isDarkMode} />
       </div>
     </Router>
   );

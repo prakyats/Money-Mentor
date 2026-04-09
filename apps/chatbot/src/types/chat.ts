@@ -39,6 +39,7 @@ export interface ChatContextType {
   messages: ChatMessage[];
   isTyping: boolean;
   isLoadingHistory: boolean;
+  embedded: boolean;
   addMessage: (text: string, type: MessageType) => Promise<void>;
   clearMessages: () => void;
   minimized: boolean;

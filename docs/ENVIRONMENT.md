@@ -44,6 +44,7 @@ Optional:
 
 - `VITE_API_BASE_URL`
 - `VITE_LANDING_LOGIN_URL`
+- `VITE_CHATBOT_URL`
 
 ## Chatbot
 

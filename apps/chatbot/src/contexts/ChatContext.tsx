@@ -14,11 +14,14 @@ const createGreetingMessage = (): ChatMessage => ({
   timestamp: new Date(),
 });
 
-export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ChatProvider: React.FC<{ children: ReactNode; embedded?: boolean }> = ({
+  children,
+  embedded = false,
+}) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
-  const [minimized, setMinimized] = useState(true);
+  const [minimized, setMinimized] = useState(!embedded);
   const [theme, setTheme] = useState<'dark' | 'light'>(getInitialTheme);
   const conversationIdRef = useRef<string | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -170,6 +173,10 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const toggleMinimized = () => {
+    if (embedded) {
+      return;
+    }
+
     setMinimized(prev => !prev);
   };
 
@@ -182,6 +189,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       messages,
       isTyping,
       isLoadingHistory,
+      embedded,
       addMessage,
       clearMessages,
       minimized,

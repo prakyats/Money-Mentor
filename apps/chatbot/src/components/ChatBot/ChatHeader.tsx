@@ -3,7 +3,7 @@ import { Trash2, Minimize, Maximize, SunMedium, MoonStar } from 'lucide-react';
 import { useChatContext } from '../../hooks/useChatContext';
 
 const ChatHeader: React.FC = () => {
-  const { clearMessages, minimized, toggleMinimized, theme, toggleTheme } = useChatContext();
+  const { clearMessages, embedded, minimized, toggleMinimized, theme, toggleTheme } = useChatContext();
 
   return (
     <div className={`flex items-center justify-between px-4 py-3 sm:px-5 ${theme === 'dark' ? 'border-b border-white/8 bg-gradient-to-r from-[#1b1b1b] via-[#171717] to-[#111111] text-white' : 'border-b border-slate-200 bg-gradient-to-r from-white via-slate-50 to-white text-slate-900'}`}>
@@ -33,13 +33,15 @@ const ChatHeader: React.FC = () => {
         >
           <Trash2 size={18} />
         </button>
-        <button
-          onClick={toggleMinimized}
-          className={`flex h-9 w-9 items-center justify-center rounded-xl border transition-colors ${theme === 'dark' ? 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white' : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}
-          aria-label={minimized ? "Maximize" : "Minimize"}
-        >
-          {minimized ? <Maximize size={18} /> : <Minimize size={18} />}
-        </button>
+        {!embedded ? (
+          <button
+            onClick={toggleMinimized}
+            className={`flex h-9 w-9 items-center justify-center rounded-xl border transition-colors ${theme === 'dark' ? 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white' : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}
+            aria-label={minimized ? "Maximize" : "Minimize"}
+          >
+            {minimized ? <Maximize size={18} /> : <Minimize size={18} />}
+          </button>
+        ) : null}
       </div>
     </div>
   );
