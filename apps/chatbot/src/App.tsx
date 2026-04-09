@@ -1,4 +1,3 @@
-import React from 'react';
 import { ChatProvider } from './contexts/ChatContext';
 import ChatBot from './components/ChatBot';
 
