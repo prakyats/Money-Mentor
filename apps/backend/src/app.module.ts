@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AuditModule } from './audit/audit.module';
 import { AuthModule } from './auth/auth.module';
+import { ChatModule } from './chat/chat.module';
 import { HealthModule } from './health/health.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { TransactionsModule } from './transactions/transactions.module';
@@ -27,6 +28,7 @@ import { RequestContextMiddleware } from './shared/request-context.middleware';
     AuthModule,
     UsersModule,
     TransactionsModule,
+    ChatModule,
     AuditModule,
   ],
   providers: [

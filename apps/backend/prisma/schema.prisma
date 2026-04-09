@@ -17,6 +17,12 @@ enum TransactionType {
   INCOME
 }
 
+enum ChatMessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
 model User {
   id                 String          @id @default(cuid())
   email              String          @unique
@@ -32,6 +38,8 @@ model User {
   goals              Goal[]
   projections        Projection[]
   notifications      Notification[]
+  chatConversations  ChatConversation[]
+  chatMessages       ChatMessage[]
   auditLogs          AuditLog[]      @relation("actorAuditLogs")
 }
 
@@ -101,6 +109,32 @@ model Notification {
   message      String
   readAt       DateTime?
   createdAt    DateTime        @default(now())
+}
+
+model ChatConversation {
+  id          String        @id @default(cuid())
+  userId      String        @unique
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  messages    ChatMessage[]
+}
+
+model ChatMessage {
+  id             String           @id @default(cuid())
+  conversationId String
+  conversation   ChatConversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           ChatMessageRole
+  content        String
+  requestId      String?
+  model          String?
+  createdAt      DateTime         @default(now())
+
+  @@index([conversationId, createdAt])
+  @@index([userId, createdAt])
 }
 
 model AuditLog {

@@ -42,7 +42,21 @@ SENTRY_DSN=
 Notes:
 - If not available now, leave empty and add later.
 
-5) Admin Bootstrap (one-time)
+5) xAI / Grok
+-------------
+AI_PROVIDER=auto
+XAI_API_KEY=
+XAI_MODEL=grok-4-0709
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=llama3.1:8b
+
+Notes:
+- XAI_API_KEY is required for chatbot responses.
+- XAI_MODEL can be overridden later if you want a different Grok model.
+- AI_PROVIDER controls provider order (`auto` tries xAI first, then Ollama).
+- OLLAMA_* values are used when fallback or Ollama-only mode is enabled.
+
+6) Admin Bootstrap (one-time)
 -----------------------------
 ADMIN_EMAIL=
 ADMIN_PASSWORD=
@@ -52,14 +66,14 @@ Notes:
 - ADMIN_PASSWORD must be at least 12 characters.
 - After first deploy, run admin seed command once.
 
-6) Render Deployment Inputs
+7) Render Deployment Inputs
 ---------------------------
 Render service name:
 Render region:
 Render plan:
 Auto-deploy branch:
 
-7) Infrastructure Ownership
+8) Infrastructure Ownership
 ---------------------------
 Who will manage these in production?
 - Render env vars owner:
@@ -67,7 +81,7 @@ Who will manage these in production?
 - DNS/domain owner:
 - Incident alert owner:
 
-8) Compliance / Security Preferences
+9) Compliance / Security Preferences
 ------------------------------------
 - Data retention policy:
 - Audit log retention:
@@ -75,18 +89,19 @@ Who will manage these in production?
 - IP allowlist needed (yes/no):
 - Any regulatory requirements (GDPR, etc):
 
-9) Optional External Integrations
+10) Optional External Integrations
 ---------------------------------
 If used later, provide keys:
 - OpenAI API key (for AI insights):
 - Email provider key (SendGrid/Resend/etc):
 - SMS provider key (Twilio/etc):
 
-10) Sign-off Checklist
+11) Sign-off Checklist
 ----------------------
 [ ] Production DATABASE_URL provided
 [ ] JWT secrets provided
 [ ] CORS origins finalized
 [ ] Admin seed credentials provided
 [ ] SENTRY_DSN provided (or explicitly deferred)
+[ ] XAI_API_KEY provided
 [ ] Render deployment details provided

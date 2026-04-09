@@ -19,6 +19,13 @@ Optional:
 - `ADMIN_EMAIL`
 - `ADMIN_PASSWORD`
 - `ADMIN_FULL_NAME`
+- `AI_PROVIDER` (`auto`, `xai`, or `ollama`; default `auto`)
+- `XAI_API_KEY`
+- `XAI_MODEL`
+- `XAI_TIMEOUT_MS`
+- `OLLAMA_BASE_URL`
+- `OLLAMA_MODEL`
+- `OLLAMA_TIMEOUT_MS`
 
 Example local database URL:
 
@@ -40,7 +47,14 @@ Optional:
 
 ## Chatbot
 
-No required environment variables at this stage.
+Required:
+
+- `VITE_API_BASE_URL` (defaults to the Render backend URL in the app)
+
+Backend-only chat variables:
+
+- `XAI_API_KEY`
+- `XAI_MODEL` (optional, defaults to `grok-4-0709`)
 
 ## Rules
 

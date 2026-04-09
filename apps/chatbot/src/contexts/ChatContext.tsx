@@ -1,34 +1,40 @@
-// src/contexts/ChatContext.tsx
-
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, ReactNode, useEffect, useRef, useState } from 'react';
 import { ChatContextType, ChatMessage, MessageType } from '../types/chat';
-import { generateId, generateBotResponse, getTypingDelay } from '../utils/chatUtils';
+import { generateId, getInitialTheme, getTypingDelay, loadChatHistory, sendChatMessage } from '../utils/chatUtils';
 
 export const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 const THEME_STORAGE_KEY = 'money-mentor-chat-theme';
+const INITIAL_GREETING = "Hello! I'm your financial assistant. How can I help you today?";
 
-const getInitialTheme = (): 'dark' | 'light' => {
-  if (typeof window === 'undefined') {
-    return 'dark';
-  }
-
-  const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
-  return storedTheme === 'light' ? 'light' : 'dark';
-};
+const createGreetingMessage = (): ChatMessage => ({
+  id: generateId(),
+  type: 'bot',
+  text: INITIAL_GREETING,
+  timestamp: new Date(),
+});
 
 export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: generateId(),
-      type: 'bot',
-      text: "Hello! I'm your financial assistant. How can I help you today?",
-      timestamp: new Date()
-    }
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [minimized, setMinimized] = useState(true);
   const [theme, setTheme] = useState<'dark' | 'light'>(getInitialTheme);
+  const conversationIdRef = useRef<string | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   React.useEffect(() => {
     if (typeof window === 'undefined') {
@@ -46,49 +52,121 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     document.documentElement.dataset.chatTheme = theme;
   }, [theme]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    const hydrateChat = async () => {
+      setIsLoadingHistory(true);
+
+      try {
+        const history = await loadChatHistory();
+
+        if (cancelled || !mountedRef.current) {
+          return;
+        }
+
+        conversationIdRef.current = history.conversationId;
+        setMessages(history.messages.length > 0 ? history.messages : [createGreetingMessage()]);
+      } catch (error) {
+        console.error('Error loading chat history:', error);
+
+        if (!cancelled && mountedRef.current) {
+          setMessages([createGreetingMessage()]);
+        }
+      } finally {
+        if (!cancelled && mountedRef.current) {
+          setIsLoadingHistory(false);
+        }
+      }
+    };
+
+    void hydrateChat();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const pushBotMessage = (text: string, timestamp?: Date) => {
+    setMessages(prev => [
+      ...prev,
+      {
+        id: generateId(),
+        type: 'bot',
+        text,
+        timestamp: timestamp ?? new Date(),
+      },
+    ]);
+  };
+
   const addMessage = async (text: string, type: MessageType) => {
     const newMessage: ChatMessage = {
       id: generateId(),
       type,
       text,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
     setMessages(prev => [...prev, newMessage]);
 
     if (type === 'user') {
       setIsTyping(true);
 
-      let botResponseText: string;
       try {
-        botResponseText = await generateBotResponse(text);
-      } catch (err) {
-        console.error('Error in generateBotResponse:', err);
-        botResponseText = "Oops—something went wrong. Please try again.";
-      }
+        const response = await sendChatMessage(text, conversationIdRef.current ?? undefined);
 
-      const delay = getTypingDelay(botResponseText);
-      setTimeout(() => {
-        const botMessage: ChatMessage = {
-          id: generateId(),
-          type: 'bot',
-          text: botResponseText,
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, botMessage]);
-        setIsTyping(false);
-      }, delay);
+        if (!mountedRef.current) {
+          return;
+        }
+
+        conversationIdRef.current = response.conversationId;
+
+        const botResponseText = response.assistantMessage.content;
+        const delay = getTypingDelay(botResponseText);
+
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+
+        timeoutRef.current = setTimeout(() => {
+          if (!mountedRef.current) {
+            return;
+          }
+
+          pushBotMessage(botResponseText, new Date(response.assistantMessage.createdAt));
+          setIsTyping(false);
+          timeoutRef.current = null;
+        }, delay);
+      } catch (err) {
+        console.error('Error sending chat message:', err);
+
+        const fallbackResponse = 'I could not reach the assistant right now. Please try again in a moment.';
+        const delay = getTypingDelay(fallbackResponse);
+
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+
+        timeoutRef.current = setTimeout(() => {
+          if (!mountedRef.current) {
+            return;
+          }
+
+          pushBotMessage(fallbackResponse);
+          setIsTyping(false);
+          timeoutRef.current = null;
+        }, delay);
+      }
     }
   };
 
   const clearMessages = () => {
-    setMessages([
-      {
-        id: generateId(),
-        type: 'bot',
-        text: "Hello! I'm your financial assistant. How can I help you today?",
-        timestamp: new Date()
-      }
-    ]);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+
+    setIsTyping(false);
+    setMessages([createGreetingMessage()]);
   };
 
   const toggleMinimized = () => {
@@ -103,6 +181,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     <ChatContext.Provider value={{
       messages,
       isTyping,
+      isLoadingHistory,
       addMessage,
       clearMessages,
       minimized,

@@ -4,7 +4,7 @@ import { useChatContext } from '../../hooks/useChatContext';
 
 const ChatInput: React.FC = () => {
   const [input, setInput] = useState('');
-  const { addMessage, theme } = useChatContext();
+  const { addMessage, isLoadingHistory, isTyping, theme } = useChatContext();
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ const ChatInput: React.FC = () => {
 
   const handleSubmit = () => {
     const trimmedInput = input.trim();
-    if (trimmedInput) {
+    if (trimmedInput && !isLoadingHistory && !isTyping) {
       addMessage(trimmedInput, 'user');
       setInput('');
     }
@@ -46,6 +46,7 @@ const ChatInput: React.FC = () => {
             onChange={handleTextareaChange}
             onKeyDown={handleKeyDown}
             placeholder="Ask about investments, budgeting, retirement..."
+            disabled={isLoadingHistory || isTyping}
             className={`w-full resize-none overflow-auto rounded-2xl border px-3 py-2 pr-10 focus:outline-none focus:ring-2 ${theme === 'dark' ? 'border-white/10 bg-white/5 text-slate-100 placeholder:text-slate-500 focus:ring-yellow-400/20' : 'border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus:ring-amber-200'}`}
             style={{ minHeight: '40px', maxHeight: '60px' }}
             rows={1}
@@ -54,9 +55,9 @@ const ChatInput: React.FC = () => {
         <div className="flex justify-end">
           <button
             onClick={handleSubmit}
-            disabled={!input.trim()}
+            disabled={!input.trim() || isLoadingHistory || isTyping}
             className={`rounded-full p-3 transition-colors ${
-              input.trim() 
+              input.trim() && !isLoadingHistory && !isTyping
                 ? theme === 'dark'
                   ? 'bg-yellow-400 text-black hover:bg-yellow-300'
                   : 'bg-slate-900 text-yellow-400 hover:bg-slate-800'
