@@ -37,15 +37,16 @@ export const BudgetAlerts = ({ profile, expenses, isDarkMode }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`${isDarkMode ? 'bg-dark-100 border-dark-200' : 'bg-white border-gray-200'} rounded-lg p-6 shadow-lg border`}
+      className="mm-card p-6"
     >
-      <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'} flex items-center`}>
-        <Bell className="w-6 h-6 mr-2 text-yellow-400" />
+      <h2 className="text-2xl font-bold mb-6 text-[var(--mm-text-primary)] flex items-center">
+        <Bell className="w-6 h-6 mr-2 text-yellow-500" />
         Budget Alerts
       </h2>
 
       {monthlyBudget <= 0 ? (
-        <div className={`mb-6 rounded-lg border px-4 py-3 text-sm ${isDarkMode ? 'border-dark-200 bg-dark-200/60 text-gray-300' : 'border-gray-200 bg-gray-50 text-gray-600'}`}>
+        <div className="mb-6 rounded-2xl border p-4 text-sm border-[var(--mm-card-border)] bg-[var(--mm-surface-shade)] text-[var(--mm-text-muted)] mt-[-0.5rem]">
+          <p className="font-bold text-[var(--mm-text-primary)] uppercase text-[11px] tracking-widest mb-1">Action Required</p>
           Configure your financial profile to unlock budget alerts and daily spending guidance.
         </div>
       ) : null}
@@ -72,24 +73,24 @@ export const BudgetAlerts = ({ profile, expenses, isDarkMode }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-dark-200' : 'bg-gray-50'}`}>
-            <h3 className={`font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="p-4 rounded-lg bg-[var(--mm-surface-shade)]">
+            <h3 className="font-medium mb-2 text-[var(--mm-text-primary)]">
               Remaining Budget
             </h3>
             <div className="flex justify-between items-baseline">
-              <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>Available</span>
+              <span className="text-[var(--mm-text-muted)]">Available</span>
               <span className={`text-xl font-semibold ${remainingBudget >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                 ₹{remainingBudget.toFixed(2)}
               </span>
             </div>
           </div>
 
-          <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-dark-200' : 'bg-gray-50'}`}>
-            <h3 className={`font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="p-4 rounded-lg bg-[var(--mm-surface-shade)]">
+            <h3 className="font-medium mb-2 text-[var(--mm-text-primary)]">
               Daily Budget
             </h3>
             <div className="flex justify-between items-baseline">
-              <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
+              <span className="text-[var(--mm-text-muted)]">
                 For next {daysLeftInMonth} days
               </span>
               <span className={`text-xl font-semibold ${dailyBudget >= 0 ? 'text-green-500' : 'text-red-500'}`}>
@@ -112,7 +113,7 @@ export const BudgetAlerts = ({ profile, expenses, isDarkMode }) => {
               </span>
             </div>
           </div>
-          <div className={`overflow-hidden h-2 mb-4 text-xs flex rounded ${isDarkMode ? 'bg-dark-300' : 'bg-gray-200'}`}>
+          <div className="overflow-hidden h-2 mb-4 text-xs flex rounded-full bg-[var(--mm-bg-main)]">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${Math.min(percentageUsed, 100)}%` }}

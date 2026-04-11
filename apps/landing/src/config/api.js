@@ -6,4 +6,7 @@ export const API_BASE_URL =
 export const DASHBOARD_URL =
   import.meta.env.VITE_DASHBOARD_URL || 'https://money-mentor-dashboard.vercel.app';
 
+export const CHATBOT_URL =
+  import.meta.env.VITE_CHATBOT_URL || 'http://localhost:5175';
+
 export { AUTH_STORAGE_KEYS };

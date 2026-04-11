@@ -23,8 +23,8 @@ const ChatBot: React.FC = () => {
   }
 
   const containerClass = embedded
-    ? `flex h-full w-full flex-col overflow-hidden rounded-3xl ${theme === 'dark' ? 'border border-yellow-400/15 bg-[#121212]' : 'border border-slate-200 bg-white'}`
-    : `fixed bottom-5 right-4 z-50 flex h-[500px] max-h-[80vh] w-full flex-col overflow-hidden rounded-3xl shadow-2xl transition-all duration-300 ease-in-out sm:bottom-6 sm:right-6 sm:w-96 ${theme === 'dark' ? 'border border-yellow-400/15 bg-[#121212]' : 'border border-slate-200 bg-white'}`;
+    ? `flex h-full w-full flex-col overflow-hidden ${theme === 'dark' ? 'bg-[#121212]' : 'bg-white'}`
+    : `fixed bottom-8 right-8 z-50 flex h-[600px] max-h-[85vh] w-full flex-col overflow-hidden rounded-[2rem] shadow-2xl transition-all duration-300 ease-in-out sm:w-[420px] ${theme === 'dark' ? 'border border-white/10 bg-[#121212]' : 'border border-slate-200 bg-white'}`;
 
   return (
     <div className={containerClass}>

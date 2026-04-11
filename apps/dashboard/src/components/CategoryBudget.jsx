@@ -64,17 +64,17 @@ export const CategoryBudget = ({ expenses, isDarkMode }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`${isDarkMode ? 'bg-dark-100 border-dark-200' : 'bg-white border-gray-200'} rounded-lg p-6 shadow-lg border`}
+      className="mm-card p-6"
     >
-      <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'} flex items-center`}>
-        <IndianRupee className="w-6 h-6 mr-2 text-yellow-400" />
+      <h2 className="text-2xl font-bold mb-6 text-[var(--mm-text-primary)] flex items-center">
+        <IndianRupee className="w-6 h-6 mr-2 text-yellow-500" />
         Category-wise Budget
       </h2>
 
       {!hasData ? (
-        <div className={`rounded-2xl border p-6 ${isDarkMode ? 'border-dark-200 bg-dark-200/60 text-gray-300' : 'border-gray-200 bg-gray-50 text-gray-600'}`}>
-          <p className="font-medium text-gray-900 dark:text-white">No category data yet</p>
-          <p className="mt-1 text-sm">Once you add expenses, this chart will show how your spending is distributed by category.</p>
+        <div className="rounded-2xl border p-6 border-[var(--mm-card-border)] bg-[var(--mm-surface-shade)] text-[var(--mm-text-muted)]">
+          <p className="font-bold text-[var(--mm-text-primary)] uppercase text-[11px] tracking-widest mb-1">No category data yet</p>
+          <p className="text-sm">Once you add expenses, this chart will show how your spending is distributed by category.</p>
         </div>
       ) : (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -113,8 +113,8 @@ export const CategoryBudget = ({ expenses, isDarkMode }) => {
           </ResponsiveContainer>
         </div>
 
-        <div className={`${isDarkMode ? 'bg-dark-200' : 'bg-gray-50'} p-4 rounded-lg`}>
-          <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+        <div className="p-4 rounded-lg bg-[var(--mm-surface-shade)]">
+          <h3 className="text-lg font-semibold mb-4 text-[var(--mm-text-primary)]">
             Category Breakdown
           </h3>
           <div className="space-y-3">
@@ -125,15 +125,15 @@ export const CategoryBudget = ({ expenses, isDarkMode }) => {
                     className="w-3 h-3 rounded-full mr-2"
                     style={{ backgroundColor: COLORS[index % COLORS.length] }}
                   />
-                  <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
+                  <span className="text-[var(--mm-text-muted)]">
                     {category.name}
                   </span>
                 </div>
                 <div className="flex items-center">
-                  <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <span className="font-medium text-[var(--mm-text-primary)]">
                     ₹{category.value.toFixed(2)}
                   </span>
-                  <span className={`ml-2 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                  <span className="ml-2 text-sm text-[var(--mm-text-muted)]">
                     ({category.percentage}%)
                   </span>
                 </div>

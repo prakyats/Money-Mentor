@@ -11,7 +11,7 @@ const buildEmbeddedUrl = (baseUrl, theme) => {
   return `${baseUrl}${separator}embed=1&theme=${theme || 'dark'}`;
 };
 
-export function ChatbotOverlay({ isDarkMode }) {
+export function ChatbotOverlay({ isDarkMode = true }) {
   const [open, setOpen] = React.useState(false);
   const theme = isDarkMode ? 'dark' : 'light';
   const iframeRef = React.useRef(null);
@@ -53,7 +53,7 @@ export function ChatbotOverlay({ isDarkMode }) {
 
   return (
     <div className="!fixed bottom-8 right-8 z-50 w-[calc(100%-4rem)] sm:w-[420px]">
-      <div className={`mm-chat-panel-enter relative h-[600px] max-h-[85vh] overflow-hidden rounded-[2rem] shadow-2xl ${isDarkMode ? 'border border-white/15 bg-[#121212]' : 'border border-slate-200 bg-white'}`}>
+      <div className={`mm-chat-panel-enter relative h-[600px] max-h-[85vh] overflow-hidden rounded-[2rem] shadow-2xl ${isDarkMode ? 'border border-white/11 bg-[#121212]' : 'border border-slate-200 bg-white'}`}>
         <iframe
           ref={iframeRef}
           title="Money Mentor Chatbot"

@@ -44,29 +44,25 @@ export const ExpenseTracker = ({ expenses, onAddExpense, isDarkMode }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`${isDarkMode ? 'bg-dark-100 border-dark-200' : 'bg-white border-gray-200'} rounded-lg p-6 shadow-lg border`}
+      className="mm-card p-6"
     >
-      <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'} flex items-center`}>
-        <IndianRupee className="w-6 h-6 mr-2 text-yellow-400" />
+      <h2 className="text-2xl font-bold mb-6 flex items-center">
+        <IndianRupee className="w-6 h-6 mr-2 text-yellow-500" />
         Expense Tracker
       </h2>
       
-      <form onSubmit={handleSubmit} className="mb-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+      <form onSubmit={handleSubmit} className="mb-8 p-6 rounded-2xl bg-[var(--mm-input-bg)] border border-[var(--mm-card-border)] shadow-sm">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
           <div>
-            <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
+            <label className="block text-[11px] font-bold text-[var(--mm-text-muted)] mb-2 uppercase tracking-widest">
               Category
             </label>
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className={`w-full p-2 border rounded-md ${
-                isDarkMode 
-                  ? 'bg-dark-200 border-dark-300 text-white focus:border-yellow-400' 
-                  : 'bg-white border-gray-300 text-gray-900 focus:border-yellow-500'
-              } focus:ring focus:ring-yellow-400/20`}
+              className="mm-select"
               required
-                aria-label="Expense category"
+              aria-label="Expense category"
             >
               <option value="">Select Category</option>
               <option value="Food">Food</option>
@@ -78,99 +74,93 @@ export const ExpenseTracker = ({ expenses, onAddExpense, isDarkMode }) => {
             </select>
           </div>
           <div>
-            <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
+            <label className="block text-[11px] font-bold text-[var(--mm-text-muted)] mb-2 uppercase tracking-widest">
               Amount
             </label>
-            <div className="relative">
-              <span className="absolute left-3 top-2 text-gray-400">₹</span>
+            <div className="relative flex items-center">
+              <span className="absolute left-4 text-[var(--mm-text-muted)] font-bold">₹</span>
               <input
                 type="number"
                 min="0.01"
                 step="0.01"
                 value={formData.amount}
                 onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                className={`w-full pl-8 p-2 border rounded-md ${
-                  isDarkMode 
-                    ? 'bg-dark-200 border-dark-300 text-white focus:border-yellow-400' 
-                    : 'bg-white border-gray-300 text-gray-900 focus:border-yellow-500'
-                } focus:ring focus:ring-yellow-400/20`}
+                className="mm-input !pl-10"
                 required
                 aria-label="Expense amount"
               />
             </div>
           </div>
           <div>
-            <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
+            <label className="block text-[11px] font-bold text-[var(--mm-text-muted)] mb-2 uppercase tracking-widest">
               Date
             </label>
             <input
               type="date"
               value={formData.date}
               onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-              className={`w-full p-2 border rounded-md ${
-                isDarkMode 
-                  ? 'bg-dark-200 border-dark-300 text-white focus:border-yellow-400' 
-                  : 'bg-white border-gray-300 text-gray-900 focus:border-yellow-500'
-              } focus:ring focus:ring-yellow-400/20`}
+              className="mm-input"
               required
-                aria-label="Expense date"
+              aria-label="Expense date"
             />
           </div>
           <div>
-            <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
+            <label className="block text-[11px] font-bold text-[var(--mm-text-muted)] mb-2 uppercase tracking-widest">
               Description
             </label>
             <input
               type="text"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className={`w-full p-2 border rounded-md ${
-                isDarkMode 
-                  ? 'bg-dark-200 border-dark-300 text-white focus:border-yellow-400' 
-                  : 'bg-white border-gray-300 text-gray-900 focus:border-yellow-500'
-              } focus:ring focus:ring-yellow-400/20`}
+              className="mm-input"
               required
-                aria-label="Expense description"
+              aria-label="Expense description"
             />
           </div>
         </div>
         <motion.button
-          whileHover={{ scale: 1.02 }}
+          whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.98 }}
           type="submit"
-          className="w-full bg-yellow-400 text-black py-2 px-4 rounded-md hover:bg-yellow-500 flex items-center justify-center font-medium"
+          className="mm-btn mm-btn-primary w-full"
         >
-          <Plus className="w-4 h-4 mr-2" />
+          <Plus className="w-5 h-5 mr-3" />
           Add Expense
         </motion.button>
       </form>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto rounded-xl border border-[var(--mm-card-border)] bg-[var(--mm-input-bg)]">
         <table className="w-full">
           <thead>
-            <tr className={`text-left border-b ${isDarkMode ? 'border-dark-300' : 'border-gray-200'}`}>
-              <th className={`pb-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Date</th>
-              <th className={`pb-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Category</th>
-              <th className={`pb-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Description</th>
-              <th className={`pb-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Amount</th>
+            <tr className="text-left border-b border-[var(--mm-card-border)] bg-[var(--mm-bg-main)]/30">
+              <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-[var(--mm-text-muted)]">Date</th>
+              <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-[var(--mm-text-muted)]">Category</th>
+              <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-[var(--mm-text-muted)]">Description</th>
+              <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-[var(--mm-text-muted)] text-right">Amount</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-[var(--mm-card-border)]">
             {expenses.length === 0 ? (
               <tr>
-                <td colSpan="4" className={`py-8 text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                <td colSpan="4" className="px-6 py-12 text-center text-[var(--mm-text-muted)] italic">
                   No expenses yet. Add your first expense to see it here.
                 </td>
               </tr>
             ) : (
               expenses.map((expense) => (
-                <tr key={expense.id} className={`border-b ${isDarkMode ? 'border-dark-300' : 'border-gray-200'}`}>
-                  <td className={`py-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <tr key={expense.id} className="hover:bg-[var(--mm-bg-main)]/20 transition-colors">
+                  <td className="px-6 py-4 text-sm font-medium text-[var(--mm-text-primary)]">
                     {formatExpenseDate(expense.date)}
                   </td>
-                  <td className={`py-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{expense.category}</td>
-                  <td className={`py-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{expense.description}</td>
-                  <td className={`py-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>₹{expense.amount.toFixed(2)}</td>
+                  <td className="px-6 py-4">
+                    <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-[var(--mm-accent)]/10 text-[var(--mm-accent)] border border-[var(--mm-accent)]/20">
+                      {expense.category}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-[var(--mm-text-muted)]">{expense.description}</td>
+                  <td className="px-6 py-4 text-sm font-bold text-[var(--mm-text-primary)] text-right">
+                    ₹{expense.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  </td>
                 </tr>
               ))
             )}

@@ -57,11 +57,9 @@ export const FinancialOverview = ({ profile = {}, expenses = [], isDarkMode = fa
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`${
-        isDarkMode ? 'bg-dark-100 border-dark-200 text-white' : 'bg-white border-gray-200 text-gray-900'
-      } rounded-lg p-6 shadow-lg border`}
+      className="mm-card p-6"
     >
-      <h2 className="text-2xl font-bold mb-6">Financial Overview</h2>
+      <h2 className="text-2xl font-bold mb-6 text-[var(--mm-text-primary)]">Financial Overview</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {metrics.map((metric) => (
@@ -91,7 +89,7 @@ export const FinancialOverview = ({ profile = {}, expenses = [], isDarkMode = fa
             {savingsProgress.toFixed(1)}%
           </span>
         </div>
-        <div className={`h-2 rounded-full ${isDarkMode ? 'bg-dark-200' : 'bg-gray-200'}`}>
+        <div className="h-2 rounded-full bg-[var(--mm-surface-shade)]">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${Math.min(savingsProgress, 100)}%` }}

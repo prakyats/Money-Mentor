@@ -22,10 +22,31 @@ export const ChatProvider: React.FC<{ children: ReactNode; embedded?: boolean }>
   const [isTyping, setIsTyping] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [minimized, setMinimized] = useState(!embedded);
-  const [theme, setTheme] = useState<'dark' | 'light'>(getInitialTheme);
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const urlTheme = params.get('theme');
+      if (urlTheme === 'dark' || urlTheme === 'light') {
+        return urlTheme;
+      }
+    }
+    return getInitialTheme();
+  });
   const conversationIdRef = useRef<string | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const mountedRef = useRef(true);
+
+  // Listen for theme updates from parent
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === 'SET_THEME' && (event.data.theme === 'dark' || event.data.theme === 'light')) {
+        setTheme(event.data.theme);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -44,7 +65,9 @@ export const ChatProvider: React.FC<{ children: ReactNode; embedded?: boolean }>
       return;
     }
 
-    window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    if (theme) {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    }
   }, [theme]);
 
   React.useEffect(() => {

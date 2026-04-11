@@ -61,10 +61,10 @@ export const SavingsProgress = ({ profile, expenses, isDarkMode }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`${isDarkMode ? 'bg-dark-100 border-dark-200' : 'bg-white border-gray-200'} rounded-lg p-6 shadow-lg border`}
+      className="mm-card p-6"
     >
-      <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'} flex items-center`}>
-        <Wallet className="w-6 h-6 mr-2 text-yellow-400" />
+      <h2 className="text-2xl font-bold mb-6 text-[var(--mm-text-primary)] flex items-center">
+        <Wallet className="w-6 h-6 mr-2 text-yellow-500" />
         Savings Distribution
       </h2>
 

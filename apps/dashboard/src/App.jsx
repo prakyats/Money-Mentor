@@ -318,7 +318,7 @@ function App() {
 
   return (
     <Router>
-      <div className={`mm-dashboard flex h-screen min-h-screen overflow-hidden md:grid md:grid-cols-[16rem_minmax(0,1fr)] ${isDarkMode ? 'bg-dark-100' : 'bg-gray-100'}`}>
+      <div className="mm-dashboard flex h-screen min-h-screen overflow-hidden md:grid md:grid-cols-[16rem_minmax(0,1fr)]">
         <Sidebar 
           isDarkMode={isDarkMode} 
           toggleDarkMode={() => setIsDarkMode(!isDarkMode)}

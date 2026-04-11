@@ -49,101 +49,91 @@ export const TaxCalculator = ({ isDarkMode }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`${isDarkMode ? 'bg-dark-100 border-dark-200' : 'bg-white border-gray-200'} rounded-lg p-6 shadow-lg border`}
+      className="mm-card p-6"
     >
-      <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'} flex items-center`}>
-        <Calculator className="w-6 h-6 mr-2 text-yellow-400" />
+      <h2 className="text-2xl font-bold mb-6 text-[var(--mm-text-primary)] flex items-center">
+        <Calculator className="w-6 h-6 mr-2 text-yellow-500" />
         Income Tax Calculator
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
+          <label className="block text-[11px] font-bold text-[var(--mm-text-muted)] mb-2 uppercase tracking-widest">
             Annual Income (₹)
           </label>
-          <div className="relative">
-            <span className="absolute left-3 top-2 text-gray-400">₹</span>
+          <div className="relative flex items-center">
+            <span className="absolute left-4 text-[var(--mm-text-muted)] font-bold">₹</span>
             <input
               type="number"
               min="1"
               step="1"
               value={income}
               onChange={(e) => setIncome(e.target.value)}
-              className={`w-full pl-8 p-2 border rounded-md ${
-                isDarkMode 
-                  ? 'bg-dark-200 border-dark-300 text-white focus:border-yellow-400' 
-                  : 'bg-white border-gray-300 text-gray-900 focus:border-yellow-500'
-              } focus:ring focus:ring-yellow-400/20`}
+              className="mm-input !pl-10"
               required
             />
           </div>
         </div>
 
         <div>
-          <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
+          <label className="block text-[11px] font-bold text-[var(--mm-text-muted)] mb-2 uppercase tracking-widest">
             Total Deductions (₹)
           </label>
-          <div className="relative">
-            <span className="absolute left-3 top-2 text-gray-400">₹</span>
+          <div className="relative flex items-center">
+            <span className="absolute left-4 text-[var(--mm-text-muted)] font-bold">₹</span>
             <input
               type="number"
               min="0"
               step="1"
               value={deductions}
               onChange={(e) => setDeductions(e.target.value)}
-              className={`w-full pl-8 p-2 border rounded-md ${
-                isDarkMode 
-                  ? 'bg-dark-200 border-dark-300 text-white focus:border-yellow-400' 
-                  : 'bg-white border-gray-300 text-gray-900 focus:border-yellow-500'
-              } focus:ring focus:ring-yellow-400/20`}
+              className="mm-input !pl-10"
               required
             />
           </div>
         </div>
 
         <motion.button
-          whileHover={{ scale: 1.02 }}
+          whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.98 }}
           type="submit"
-          className="w-full bg-yellow-400 text-black py-2 px-4 rounded-md hover:bg-yellow-500 flex items-center justify-center font-medium"
+          className="mm-btn mm-btn-primary w-full mt-2"
         >
           Calculate Tax
         </motion.button>
       </form>
 
       {errorMessage ? (
-        <div className={`mt-4 rounded-lg border px-4 py-3 text-sm ${isDarkMode ? 'border-red-400/30 bg-red-500/10 text-red-200' : 'border-red-200 bg-red-50 text-red-700'}`}>
+        <div className="mt-4 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-500">
           {errorMessage}
         </div>
       ) : null}
 
       {taxableIncome !== null && (
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={`mt-6 p-4 rounded-lg ${
-            isDarkMode ? 'bg-dark-200 border-dark-300' : 'bg-gray-50 border-gray-200'
-          } border`}
-        >
-          <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mt-6 p-5 rounded-2xl bg-[var(--mm-surface-shade)] border border-[var(--mm-card-border)]"
+            >
+          <h3 className="text-lg font-semibold mb-4 text-[var(--mm-text-primary)]">
             Tax Calculation Results
           </h3>
           <div className="space-y-2">
             <div className="flex justify-between">
-              <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>Taxable Income:</span>
-              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <span className="text-[var(--mm-text-muted)]">Taxable Income:</span>
+              <span className="font-semibold text-[var(--mm-text-primary)]">
                 ₹{taxableIncome.toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>Tax Amount:</span>
-              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <span className="text-[var(--mm-text-muted)]">Tax Amount:</span>
+              <span className="font-semibold text-[var(--mm-text-primary)]">
                 ₹{taxAmount.toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>Effective Tax Rate:</span>
-              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <span className="text-[var(--mm-text-muted)]">Effective Tax Rate:</span>
+              <span className="font-semibold text-[var(--mm-text-primary)]">
                 {((taxAmount / taxableIncome) * 100).toFixed(2)}%
               </span>
             </div>

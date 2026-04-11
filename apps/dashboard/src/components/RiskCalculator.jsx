@@ -41,49 +41,49 @@ export const RiskCalculator = ({ profile, isDarkMode }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`${isDarkMode ? 'bg-dark-100 border-dark-200' : 'bg-white border-gray-200'} rounded-lg p-6 shadow-lg border`}
+      className="mm-card p-6"
     >
-      <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'} flex items-center`}>
+      <h2 className="text-2xl font-bold mb-6 text-[var(--mm-text-primary)] flex items-center">
         <TrendingUp className="w-6 h-6 mr-2 text-yellow-400" />
         Investment Risk Profile
       </h2>
 
       <div className="space-y-6">
         <div>
-          <h3 className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <h3 className="text-lg font-semibold mb-2 text-[var(--mm-text-primary)]">
             Your Risk Profile: {riskProfile.riskLevel}
           </h3>
-          <p className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
+          <p className="text-[var(--mm-text-muted)]">
             {riskProfile.description}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-dark-200' : 'bg-gray-50'}`}>
-            <h4 className={`font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="p-4 rounded-lg bg-[var(--mm-surface-shade)]">
+            <h4 className="font-medium mb-2 text-[var(--mm-text-primary)]">
               Recommended Asset Allocation
             </h4>
             <div className="space-y-2">
               <div className="flex justify-between">
-                <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>Equity</span>
-                <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <span className="text-[var(--mm-text-muted)]">Equity</span>
+                <span className="font-semibold text-[var(--mm-text-primary)]">
                   {riskProfile.equityAllocation}%
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>Debt</span>
-                <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <span className="text-[var(--mm-text-muted)]">Debt</span>
+                <span className="font-semibold text-[var(--mm-text-primary)]">
                   {riskProfile.debtAllocation}%
                 </span>
               </div>
             </div>
           </div>
 
-          <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-dark-200' : 'bg-gray-50'}`}>
-            <h4 className={`font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="p-4 rounded-lg bg-[var(--mm-surface-shade)]">
+            <h4 className="font-medium mb-2 text-[var(--mm-text-primary)]">
               Risk Factors
             </h4>
-            <ul className={`list-disc list-inside space-y-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <ul className="list-disc list-inside space-y-1 text-[var(--mm-text-muted)]">
               <li>Market volatility</li>
               <li>Economic conditions</li>
               <li>Interest rate changes</li>

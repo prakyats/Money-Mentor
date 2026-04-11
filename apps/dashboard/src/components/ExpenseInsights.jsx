@@ -62,16 +62,16 @@ export const ExpenseInsights = ({ expenses, isDarkMode }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`${isDarkMode ? 'bg-dark-100 border-dark-200' : 'bg-white border-gray-200'} rounded-lg p-4 sm:p-6 shadow-lg border`}
+      className="mm-card p-4 sm:p-6"
     >
-      <h2 className={`text-xl sm:text-2xl font-bold mb-4 sm:mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'} flex items-center`}>
-        <PieChartIcon className="w-6 h-6 mr-2 text-yellow-400" />
+      <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-[var(--mm-text-primary)] flex items-center">
+        <PieChartIcon className="w-6 h-6 mr-2 text-yellow-500" />
         Expense Insights
       </h2>
 
       {!hasData ? (
-        <div className={`rounded-2xl border p-6 ${isDarkMode ? 'border-dark-200 bg-dark-200/60 text-gray-300' : 'border-gray-200 bg-gray-50 text-gray-600'}`}>
-          <p className="font-medium text-gray-900 dark:text-white">No expense data yet</p>
+        <div className="rounded-2xl border p-6 border-[var(--mm-card-border)] bg-[var(--mm-input-bg)] text-[var(--mm-text-muted)]">
+          <p className="font-medium text-[var(--mm-text-primary)]">No expense data yet</p>
           <p className="mt-1 text-sm">Add a few expenses to see category and monthly charts here.</p>
         </div>
       ) : (

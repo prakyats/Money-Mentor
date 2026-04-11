@@ -40,11 +40,7 @@ export const Dashboard = ({ profile, expenses, onSaveProfile, onAddExpense, isDa
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`mt-4 rounded-lg border p-4 sm:p-5 ${
-          isDarkMode
-            ? 'bg-dark-100 border-dark-200 text-gray-300'
-            : 'bg-white border-gray-200 text-gray-700'
-        }`}
+        className="mt-4 rounded-lg border p-4 sm:p-5 bg-[var(--mm-card-bg)] border-[var(--mm-card-border)] text-[var(--mm-text-muted)]"
       >
         <p className="text-sm sm:text-base">
           Assistant integration is available and can be connected to your hosted backend endpoint when you are ready.

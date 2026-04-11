@@ -30,30 +30,26 @@ export const ProfileSetup = ({ profile, onSave, isDarkMode }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`${isDarkMode ? 'bg-dark-100 border-dark-200' : 'bg-white border-gray-200'} rounded-lg p-6 shadow-lg border`}
+      className="mm-card p-6"
     >
-      <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'} flex items-center`}>
-        <IndianRupee className="w-6 h-6 mr-2 text-yellow-400" />
+      <h2 className="text-2xl font-bold mb-6 text-[var(--mm-text-primary)] flex items-center">
+        <IndianRupee className="w-6 h-6 mr-2 text-yellow-500" />
         Financial Profile
       </h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
+          <label className="block text-sm font-bold text-[var(--mm-text-muted)] mb-2 uppercase tracking-wide">
             Annual Income (₹)
           </label>
-          <div className="relative">
-            <span className="absolute left-3 top-2 text-gray-400">₹</span>
+          <div className="relative flex items-center">
+            <span className="absolute left-4 text-[var(--mm-text-muted)] font-bold">₹</span>
             <input
               type="number"
               min="0"
               step="1"
               value={formData.annualIncome}
               onChange={(e) => setFormData({ ...formData, annualIncome: Number(e.target.value) })}
-              className={`w-full pl-8 p-2 border rounded-md ${
-                isDarkMode 
-                  ? 'bg-dark-200 border-dark-300 text-white focus:border-yellow-400' 
-                  : 'bg-white border-gray-300 text-gray-900 focus:border-yellow-500'
-              } focus:ring focus:ring-yellow-400/20`}
+              className="mm-input !pl-10"
               placeholder="Enter your annual income"
               required
             />
@@ -61,7 +57,7 @@ export const ProfileSetup = ({ profile, onSave, isDarkMode }) => {
         </div>
 
         <div>
-          <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
+          <label className="block text-sm font-bold text-[var(--mm-text-muted)] mb-2 uppercase tracking-wide">
             Age
           </label>
           <input
@@ -70,11 +66,7 @@ export const ProfileSetup = ({ profile, onSave, isDarkMode }) => {
             step="1"
             value={formData.age}
             onChange={(e) => setFormData({ ...formData, age: Number(e.target.value) })}
-            className={`w-full p-2 border rounded-md ${
-              isDarkMode 
-                ? 'bg-dark-200 border-dark-300 text-white focus:border-yellow-400' 
-                : 'bg-white border-gray-300 text-gray-900 focus:border-yellow-500'
-            } focus:ring focus:ring-yellow-400/20`}
+            className="mm-input"
             placeholder="Enter your age"
             required
             max="100"
@@ -82,10 +74,10 @@ export const ProfileSetup = ({ profile, onSave, isDarkMode }) => {
         </div>
 
         <div>
-          <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
+          <label className="block text-sm font-bold text-[var(--mm-text-muted)] mb-2 uppercase tracking-wide">
             Monthly Savings Goal (% of income)
           </label>
-          <div className="relative">
+          <div className="relative flex items-center">
             <input
               type="number"
               min="0"
@@ -93,30 +85,22 @@ export const ProfileSetup = ({ profile, onSave, isDarkMode }) => {
               step="1"
               value={formData.savingsGoal}
               onChange={(e) => setFormData({ ...formData, savingsGoal: Number(e.target.value) })}
-              className={`w-full pr-8 p-2 border rounded-md ${
-                isDarkMode 
-                  ? 'bg-dark-200 border-dark-300 text-white focus:border-yellow-400' 
-                  : 'bg-white border-gray-300 text-gray-900 focus:border-yellow-500'
-              } focus:ring focus:ring-yellow-400/20`}
+              className="mm-input !pr-10"
               placeholder="Enter savings goal percentage"
               required
             />
-            <span className="absolute right-3 top-2 text-gray-400">%</span>
+            <span className="absolute right-4 text-[var(--mm-text-muted)] font-bold">%</span>
           </div>
         </div>
 
         <div>
-          <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
+          <label className="block text-sm font-bold text-[var(--mm-text-muted)] mb-2 uppercase tracking-wide">
             Risk Tolerance
           </label>
           <select
             value={formData.riskTolerance}
             onChange={(e) => setFormData({ ...formData, riskTolerance: e.target.value })}
-            className={`w-full p-2 border rounded-md ${
-              isDarkMode 
-                ? 'bg-dark-200 border-dark-300 text-white focus:border-yellow-400' 
-                : 'bg-white border-gray-300 text-gray-900 focus:border-yellow-500'
-            } focus:ring focus:ring-yellow-400/20`}
+            className="mm-select"
             required
           >
             <option value="">Select risk tolerance</option>
@@ -127,12 +111,12 @@ export const ProfileSetup = ({ profile, onSave, isDarkMode }) => {
         </div>
 
         <motion.button
-          whileHover={{ scale: 1.02 }}
+          whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.98 }}
           type="submit"
-          className="w-full bg-yellow-400 text-black py-2 px-4 rounded-md hover:bg-yellow-500 flex items-center justify-center font-medium"
+          className="mm-btn mm-btn-primary w-full mt-2"
         >
-          <Save className="w-4 h-4 mr-2" />
+          <Save className="w-5 h-5 mr-3" />
           Save Profile
         </motion.button>
       </form>

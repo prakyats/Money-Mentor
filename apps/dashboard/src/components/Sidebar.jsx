@@ -65,10 +65,7 @@ export const Sidebar = ({ isDarkMode, toggleDarkMode, isOpen, onToggle, onClose,
         type="button"
         aria-label={isOpen ? 'Close sidebar' : 'Open sidebar'}
         onClick={onToggle}
-        className={`
-          fixed left-4 top-4 z-50 flex h-11 w-11 items-center justify-center rounded-2xl border shadow-lg transition-all duration-200 md:hidden
-          ${isDarkMode ? 'border-dark-200 bg-dark-100 text-yellow-400' : 'border-dark-200 bg-dark-100 text-amber-400'}
-        `}
+        className="fixed left-4 top-4 z-50 flex h-11 w-11 items-center justify-center rounded-2xl border shadow-lg transition-all duration-200 md:hidden bg-[var(--mm-sidebar-bg)] border-[var(--mm-card-border)] text-[var(--mm-accent)]"
       >
         {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
       </button>
@@ -76,7 +73,7 @@ export const Sidebar = ({ isDarkMode, toggleDarkMode, isOpen, onToggle, onClose,
       <aside
         className={`
           fixed left-0 top-0 z-40 flex h-dvh w-[86vw] max-w-sm flex-col overflow-hidden border-r shadow-2xl transition-transform duration-300 ease-out md:sticky md:top-0 md:h-screen md:w-64 md:max-w-none md:translate-x-0 md:shadow-none
-          ${isDarkMode ? 'bg-dark-100 border-dark-200' : 'bg-white border-gray-200'}
+          bg-[var(--mm-sidebar-bg)] border-[var(--mm-card-border)]
           ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
         `}
       >
@@ -86,10 +83,10 @@ export const Sidebar = ({ isDarkMode, toggleDarkMode, isOpen, onToggle, onClose,
               <IndianRupee className="h-6 w-6" />
             </div>
             <div className="min-w-0 flex-1">
-              <h1 className={`text-base font-extrabold tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h1 className="text-base font-extrabold tracking-tight text-[var(--mm-text-primary)]">
                 Money Mentor
               </h1>
-              <p className={`text-[11px] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <p className="text-[11px] text-[var(--mm-text-muted)]">
                 Your money, organized
               </p>
             </div>
@@ -99,7 +96,7 @@ export const Sidebar = ({ isDarkMode, toggleDarkMode, isOpen, onToggle, onClose,
             type="button"
             aria-label="Close sidebar"
             onClick={closeSidebar}
-            className={`flex h-9 w-9 items-center justify-center rounded-xl border md:hidden ${isDarkMode ? 'border-dark-200 bg-dark-200 text-gray-200' : 'border-gray-200 bg-gray-50 text-gray-700'}`}
+            className="flex h-9 w-9 items-center justify-center rounded-xl border md:hidden border-[var(--mm-card-border)] bg-[var(--mm-surface-shade)] text-[var(--mm-text-primary)]"
           >
             <X className="h-5 w-5" />
           </button>
@@ -107,16 +104,16 @@ export const Sidebar = ({ isDarkMode, toggleDarkMode, isOpen, onToggle, onClose,
 
         <div className="flex min-h-0 flex-1 flex-col justify-between px-4 pb-4 pt-4">
           <div>
-          <div className={`mb-3 rounded-2xl border p-3 ${isDarkMode ? 'border-dark-200 bg-dark-200/60' : 'border-gray-200 bg-gray-50'}`}>
+          <div className="mb-3 rounded-2xl border p-3 border-[var(--mm-card-border)] bg-[var(--mm-input-bg)]">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-400/15 text-yellow-400">
                 <UserCircle2 className="h-6 w-6" />
               </div>
               <div className="min-w-0">
-                <p className={`truncate text-sm font-semibold leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <p className="truncate text-sm font-semibold leading-tight text-[var(--mm-text-primary)]">
                   {displayName}
                 </p>
-                <p className={`truncate text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                <p className="truncate text-xs text-[var(--mm-text-muted)]">
                   {displayEmail}
                 </p>
               </div>
